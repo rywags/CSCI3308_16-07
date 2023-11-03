@@ -1,0 +1,44 @@
+Team Number
+#07
+Team Name
+Beat Builders
+Team Members
+Eric Fithian: Eric-Fithian
+Owen Vangermeersch: owva7393
+Ryan Wagster: rywags
+Application Name
+Soundsphere
+Application Description
+Our application will be a social media music-sharing website. It will be like if instagram and spotify had a baby.
+There will be a feed screen and a profile screen. Users will be able to make posts to the feed. These posts can consist of an album photo or song photo, a soundbite, a song link, a comment, and tags such as genre, style, and sentiment. Anyone who follows you will see your posts on their feed. Users will be able to put things on their profile such as top 3 current songs, playlists, artists, and more. Users can search and find other users and follow them. Users can also make group chats with other users. These chats will be focused on sharing specific music tastes in correspondence to the music taste associated with the group chat. 
+Vision Statement
+To be the world’s go-to platform for discovering, and sharing music. 
+Version Control
+https://github.com/rywags/CSCI3308_16-07.git
+Development Methodology 
+Epics
+User Account Management System
+Feed and Content Sharing
+Tickets to live events
+User Profile Customization
+Social Interaction and Networking
+Real-Time Group Chat/Communication
+User Experience and Interface
+Communication Plan
+We have both a group chat and a discord server for communication. 
+Meeting Plan
+Our team will be meeting with our TA sometime between 12-1 and our team will host our meeting immediately after (zoom). 
+Use Case Diagram
+Wireframes
+
+
+
+
+Processes:
+Login/register
+View/Edit profile
+Search for people
+Follow people
+View Feed
+
+
