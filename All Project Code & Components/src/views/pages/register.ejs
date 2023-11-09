@@ -1,0 +1,29 @@
+<%- include ('../partials/head') %>
+    <%- include ('../partials/menu') %>
+
+        <main>
+            <div class="col"><%- include ('../partials/message') %></div>
+            <div class="container">
+                <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+                <form action="/register" method="POST"
+                    style="display: block; width: 50%; margin: 0 auto; padding-top: 10px;">
+                    <h2>
+                        <centre>Register</centre>
+                    </h2>
+                    <label class="form-label" for="username">Username</label>
+                    <input id="username" class="form-control" name="username" class="input" type="text" />
+                    <label class="form-label" for="email">Email Address</label>
+                    <input id="email" class="form-control" name="email" class="input" type="email" />
+                    <label class="form-label" for="password">Password</label>
+                    <input id="password" class="form-control" name="password" class="input" type="password" />
+                    <hr class="solid" style="border-top: 2px solid #bbb;">
+                    <label class="form-label" for="spotify">Spotify Username</label>
+                    <input id="spotify" class="form-control" name="spotify" class="input" type="text" />
+                    <label class="control-label" for="button" style="float: left;">Already have an account? <a
+                            href="/login">Login</a></label>
+                    <button id="button" class="btn btn-primary" type="submit" style="float: right;">Register</button>
+                </form>
+            </div>
+        </main>
+
+        <%- include ('../partials/footer') %>
