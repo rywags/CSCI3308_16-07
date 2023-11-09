@@ -1,0 +1,26 @@
+TA Meeting 1:
+So far we have created a database, with login, register, routes, and menu, footer, header, pages. 
+Next Steps:
+Profile Pages
+Routes
+Spotify API and connecting each profile with Spotify
+Basic Home Page
+Make Release Notes
+Checklist for next week's meeting
+Upload Minutes of meeting
+
+Team Meeting;
+Done so far:
+Updated headers and footers, imported login route, imported register route.
+Created shared document to continuously update tasks completed
+Outlined next tasks to be worked on
+Tasks to be acomplished:
+    Profile Page - Owen
+    Basic Home Page - 
+    Checklist for next week's meeting
+    Routes
+    Connect Spotify API to connect their public account to our website
+    Create CSS stylesheet
+    Create Authorization Middleware
+
+
