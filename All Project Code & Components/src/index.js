@@ -47,8 +47,59 @@ app.use(
 
 //TODO: Implement Endpoints
 app.get('/', (req, res) => {
-    res.render('pages/home.ejs');
-})
+    res.render('pages/home');
+});
+
+app.get('/login', (req, res) => {
+    res.render('pages/login');
+});
+
+app.post('/login', async (req, res) => {
+    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1;', req.body.username);
+    if (!user) {
+        res.render('pages/login', { message: "User not found. Please check your username." });
+    } else {
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (!match) {
+            res.render('pages/login', { message: "Incorrect password. Please try again." });
+        } else {
+            req.session.user = user;
+            req.session.save();
+            res.redirect('/discover');
+        }
+    }
+});
+
+app.get('/register', (req, res) => {
+    res.render('pages/register');
+});
+
+app.post('/register', async (req, res) => {
+    if (!req.body.username || !req.body.password) {
+        res.render('pages/register', { error: "Username and password are required." });
+    }
+    const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1;', req.body.username);
+    if (existingUser) {
+        res.render('pages/register', { error: "Username already exists. Please choose a different one." });
+    }
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const addUser = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+    const userInfo = [req.body.username, hash];
+    try {
+        await db.none(addUser, userInfo);
+        res.redirect('/login');
+    } catch (error) {
+        console.error(error);
+        res.render('pages/register', { message: "An error occurred during registration. Please try again." });
+    }
+});
+
+
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.render('pages/login', { message: "Logged out Successfully" });
+});
 
 // starting the server and keeping the connection open to listen for more requests
 app.listen(3000);
