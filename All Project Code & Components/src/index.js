@@ -45,9 +45,13 @@ app.use(
     })
 );
 
+const user = {
+    username: undefined
+}
+
 //TODO: Implement Endpoints
 app.get('/', (req, res) => {
-    res.render('pages/home');
+    res.redirect('/discovery');
 });
 
 app.get('/login', (req, res) => {
@@ -55,19 +59,26 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1;', req.body.username);
-    if (!user) {
-        res.render('pages/login', { message: "User not found. Please check your username." });
-    } else {
-        const match = await bcrypt.compare(req.body.password, user.password);
-        if (!match) {
-            res.render('pages/login', { message: "Incorrect password. Please try again." });
-        } else {
-            req.session.user = user;
-            req.session.save();
-            res.redirect('/discover');
-        }
-    }
+    await db.one('SELECT * FROM users WHERE username = $1;', req.body.username)
+        .then(async (data) => {
+            const match = await bcrypt.compare(req.body.password, data.password);
+            if (match) {
+                user.username = req.body.username;
+                req.session.user = user;
+                req.session.save();
+                res.redirect('/');
+            } else {
+                res.render('pages/login', {
+                    message: "Incorrect username or password.",
+                    error: true
+                });
+            }
+        }).catch((error) => {
+            res.render('pages/login', {
+                message: "User not found. Please check your username.",
+                error: true
+            });
+        });
 });
 
 app.get('/register', (req, res) => {
@@ -75,28 +86,52 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    if (!req.body.username || !req.body.password) {
-        res.render('pages/register', { error: "Username and password are required." });
+    if (!req.body.username || !req.body.email || !req.body.password || !req.body.spotifyUserID) {
+        res.render('pages/register', { message: "Missing fields.", error: true });
     }
-    const existingUser = await db.oneOrNone('SELECT * FROM users WHERE username = $1;', req.body.username);
-    if (existingUser) {
-        res.render('pages/register', { error: "Username already exists. Please choose a different one." });
-    }
-    const hash = await bcrypt.hash(req.body.password, 10);
-    const addUser = 'INSERT INTO users (username, password) VALUES ($1, $2)';
-    const userInfo = [req.body.username, hash];
-    try {
-        await db.none(addUser, userInfo);
-        res.redirect('/login');
-    } catch (error) {
-        console.error(error);
-        res.render('pages/register', { message: "An error occurred during registration. Please try again." });
+    else {
+        const username = req.body.username.trim().toLowerCase();
+        const email = req.body.email.trim().toLowerCase();
+        const existingUser = await db.oneOrNone('SELECT * FROM users WHERE LOWER(username) = $1 OR LOWER(email) = $2;', [username, email]);
+        if (existingUser) {
+            res.render('pages/register', {
+                message: "Username or email already exists.",
+                error: true
+            });
+            return;
+        }
+        const hash = await bcrypt.hash(req.body.password, 10);
+        const addUser = 'INSERT INTO users (username, email, password, spotify_user_id) VALUES ($1, $2, $3, $4)';
+        const userInfo = [req.body.username.trim(), req.body.email.trim(), hash, req.body.spotifyUserID];
+        await db.none(addUser, userInfo)
+            .then(() => {
+                res.redirect('/login');
+            }).catch((error) => {
+                console.error(error);
+                res.render('pages/register', {
+                    message: "Registration failed",
+                    error: true
+                });
+            })
     }
 });
 
+const auth = (req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}; // middleware to check if the user is logged in
 
+app.use(auth);
+
+app.get('/discovery', async (req, res) => {
+    res.render('pages/home');
+});
 
 app.get('/logout', (req, res) => {
+    user.username = undefined;
     req.session.destroy();
     res.render('pages/login', { message: "Logged out Successfully" });
 });
