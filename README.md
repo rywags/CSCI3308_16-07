@@ -8,6 +8,7 @@ Contributors - In this case, it will be the team Members
 Eric Fithian: Eric-Fithian
 Owen Vangermeersch: owva7393
 Ryan Wagster: rywags
+Yuhe Zou: YuheZou
 
 Technology Stack used for the project
 
