@@ -3,9 +3,23 @@
 
         <main>
             <div class="col"><%- include ('../partials/message') %></div>
-            <div class="container">
-                <h3>Hello World</h3>
-            </div>
+                <head>
+                    <title>My Feed</title>
+                </head>
+                <body>
+                    <% posts.forEach(post => { %>
+                        <div class="post">
+                            <!-- <img src="<%= post.profilePic %>" alt="Profile Picture"> -->
+                            <h3><%= post.username %></h3>
+                            <!-- <div class="comments">
+                                <% post.comments.forEach(comment => { %>
+                                    <p><%= comment %></p>
+                                <% }); %>
+                            </div> -->
+                            <div class="music-sample">Music sample here</div>
+                        </div>
+                    <% }); %>
+                </body>
         </main>
 
         <%- include ('../partials/footer') %>
