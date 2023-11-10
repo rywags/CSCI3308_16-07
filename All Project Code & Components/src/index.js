@@ -66,6 +66,7 @@ app.post('/login', async (req, res) => {
                 user.username = req.body.username;
                 req.session.user = user;
                 req.session.save();
+                // res.json({ message: "Logged in successfully" });
                 res.redirect('/');
             } else {
                 res.render('pages/login', {
@@ -86,8 +87,17 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    if (!req.body.username || !req.body.email || !req.body.password || !req.body.spotifyUserID) {
-        res.render('pages/register', { message: "Missing fields.", error: true });
+    if (!req.body.username || !req.body.email || !req.body.password1 || !req.body.password2 || !req.body.spotifyUserID) {
+        res.render('pages/register', {
+            message: "Missing fields.",
+            error: true
+        });
+    }
+    if (req.body.password1 !== req.body.password2) {
+        res.render('pages/register', {
+            message: "Passwords do not match.",
+            error: true
+        });
     }
     else {
         const username = req.body.username.trim().toLowerCase();
@@ -100,7 +110,7 @@ app.post('/register', async (req, res) => {
             });
             return;
         }
-        const hash = await bcrypt.hash(req.body.password, 10);
+        const hash = await bcrypt.hash(req.body.password1, 10);
         const addUser = 'INSERT INTO users (username, email, password, spotify_user_id) VALUES ($1, $2, $3, $4)';
         const userInfo = [req.body.username.trim(), req.body.email.trim(), hash, req.body.spotifyUserID];
         await db.none(addUser, userInfo)
@@ -114,6 +124,16 @@ app.post('/register', async (req, res) => {
                 });
             })
     }
+});
+
+app.delete('/delete/:username', (req, res) => {
+    db.none('DELETE FROM users WHERE username = $1;', req.params.username)
+        .then(() => {
+            res.json({ message: "User deleted successfully" });
+        }).catch((error) => {
+            console.error(error);
+            res.json({ message: "User deletion failed" });
+        });
 });
 
 const auth = (req, res, next) => {
@@ -137,5 +157,5 @@ app.get('/logout', (req, res) => {
 });
 
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
