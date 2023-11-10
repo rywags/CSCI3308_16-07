@@ -1,5 +1,6 @@
 <%- include ('../partials/head') %>
   <%- include ('../partials/menu') %>
+
     <main>
       <div class="col"><%- include ('../partials/message') %></div>
       <div class="container">
@@ -10,18 +11,18 @@
           </h2>
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="FormControlInput1" placeholder="name@example.com">
+            <input type="email" class="form-control input" name="email" placeholder="name@example.com">
           </div>
 
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">User Name</label>
-            <input type="text" class="form-control" id="FormControlInput2" placeholder="create your user name">
+            <input type="text" class="form-control input" name="username" placeholder="create your user name">
           </div>
 
 
           <div class="mb-3">
             <label for="inputPassword5" class="form-label">Password</label>
-            <input type="password" id="inputPassword3" class="form-control" aria-describedby="passwordHelpBlock">
+            <input type="password" name="password1" class="form-control input" aria-describedby="passwordHelpBlock">
             <div id="passwordHelpBlock" class="form-text">
               Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces,
               special characters, or emoji.
@@ -31,11 +32,13 @@
           <div class="mb-3">
             <label for="inputPassword5" class="form-label">Confirm Password</label>
             <input type="password" id="inputPassword4" class="form-control">
+            <input type="password" name="password2" class="form-control input">
           </div>
 
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Spotify User ID</label>
             <input type="number" class="form-control" id="FormControlInput3">
+            <input type="number" class="form-control input" name="spotifyUserID">
           </div>
           <div>
             <label class="control-label" for="button" style="float: left;">Already have an account? <a
@@ -47,7 +50,6 @@
             <button class="btn btn-primary" type="submit">Register Now!</button>
           </div>
         </form>
-        >>>>>>> 7ae9faf (added my register page)
       </div>
       </div>
 
@@ -72,5 +74,6 @@
       </form>
       </div>
     </main>
-
+    </div>
+    </main>
     <%- include ('../partials/footer') %>

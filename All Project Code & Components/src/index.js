@@ -71,7 +71,8 @@ app.post('/login', async (req, res) => {
                 user.id = data.user_id;
                 req.session.user = user;
                 req.session.save();
-                res.redirect('/discovery');
+                // res.json({ message: "Logged in successfully" });
+                res.redirect('/');
             } else {
                 res.render('pages/login', {
                     message: "Incorrect username or password.",
@@ -140,7 +141,6 @@ app.delete('/delete/:username', (req, res) => {
         });
 });
 
-// middleware to check if the user is logged in
 const auth = (req, res, next) => {
     if (req.session.user) {
         next();
