@@ -55,7 +55,7 @@ let tokenExpirationTime = null;
 
 //TODO: Implement Endpoints
 app.get('/', (req, res) => {
-    res.redirect('/discovery');
+    res.redirect('/discovery/10');
 });
 
 app.get('/login', (req, res) => {
@@ -149,17 +149,9 @@ const auth = (req, res, next) => {
     }
 };
 
-app.get('/discovery', auth, async (req, res) => {
-    res.render('pages/home');
-    // try {
-    //     const response = await axios.get('http://localhost:3000/get_posts/10', { withCredentials: true });
-    //     const posts = response.data;
-    //     res.render('pages/home', { posts });
-    // } catch (error) {
-    //     console.error(error);
-    //     res.render('pages/home');
-    // }
-});
+// app.get('/discovery', auth, async (req, res) => {
+//     res.redirect('/api/get_posts/10');
+// });
 
 app.get('/logout', auth, (req, res) => {
     user.username = undefined;
@@ -190,7 +182,7 @@ app.post('/create_post', auth, async (req, res) => {
         const values = [postInfo.user_id, postInfo.img_url, postInfo.song_name, postInfo.artist, postInfo.song_url, postInfo.song_duration, postInfo.explicit, postInfo.description];
 
         await db.none(sql, values);
-        res.redirect('/discovery');
+        res.redirect('/');
     } catch (error) {
         console.error(error);
         res.render('pages/home', {
@@ -254,16 +246,18 @@ async function getAccessToken() {
     }
 }
 
-app.get('/api/get_posts/:amount', auth, async (req, res) => {
+app.get('/discovery/:amount', auth, async (req, res) => {
     const amount = req.params.amount;
     const posts = await db.any(`SELECT * FROM posts ORDER BY post_id DESC LIMIT $1;`, [amount])
         .then((data) => {
-            return data;
+            res.render('pages/home', { posts: data });
         }).catch((error) => {
+            res.render('pages/home', {
+                message: "Failed to get posts",
+                error: true
+            });
             console.error(error);
-            return null;
         });
-    res.json(posts);
 });
 
 // starting the server and keeping the connection open to listen for more requests
