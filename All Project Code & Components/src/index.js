@@ -262,4 +262,5 @@ app.get('/discovery/:amount', auth, async (req, res) => {
 
 // starting the server and keeping the connection open to listen for more requests
 module.exports = app.listen(3000);
+module.exports = app.listen(3000);
 console.log('Server is listening on port 3000');
