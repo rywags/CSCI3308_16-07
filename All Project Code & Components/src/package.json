@@ -12,7 +12,7 @@
         "pg-promise": "^10.11.1",
         "nodemon": "2.0.20"
     },
-
+    
     "devDependencies": {
         "nodemon": "^2.0.7",
         "chai": "^4.2.0",
@@ -27,4 +27,5 @@
         "test": "mocha",
         "testandrun": "npm run prestart && npm run test && npm run dev"
       }
+
 }
