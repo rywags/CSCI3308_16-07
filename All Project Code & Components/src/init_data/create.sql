@@ -15,8 +15,10 @@ CREATE TABLE posts (
     user_id INT,
     img_url VARCHAR(2000),
     song_name VARCHAR(255),
-    artist_name VARCHAR(255),
+    artist VARCHAR(255),
     song_url VARCHAR(2000),
+    song_duration INT, -- ms
+    explicit BOOLEAN,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
