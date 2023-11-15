@@ -1,54 +1,55 @@
 <%- include ('../partials/head') %>
   <%- include ('../partials/menu') %>
+    <%- include ('../partials/menu') %>
 
-    <main>
-      <div class="col"><%- include ('../partials/message') %></div>
-      <div class="container">
-        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-        <form action="/register" method="POST" style="display: block; width: 50%; margin: 0 auto; padding-top: 10px;">
-          <h2>
-            <centre>New User Register</centre>
-          </h2>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Email address</label>
-            <input type="email" class="form-control input" name="email" placeholder="name@example.com">
-          </div>
-
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">User Name</label>
-            <input type="text" class="form-control input" name="username" placeholder="create your user name">
-          </div>
-
-
-          <div class="mb-3">
-            <label for="inputPassword5" class="form-label">Password</label>
-            <input type="password" name="password1" class="form-control input" aria-describedby="passwordHelpBlock">
-            <div id="passwordHelpBlock" class="form-text">
-              Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces,
-              special characters, or emoji.
+      <main>
+        <div class="col"><%- include ('../partials/message') %></div>
+        <div class="container">
+          <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+          <form action="/register" method="POST" style="display: block; width: 50%; margin: 0 auto; padding-top: 10px;">
+            <h2>
+              <centre>New User Register</centre>
+            </h2>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Email address</label>
+              <input type="email" class="form-control input" name="email" placeholder="name@example.com">
             </div>
-          </div>
 
-          <div class="mb-3">
-            <label for="inputPassword5" class="form-label">Confirm Password</label>
-            <input type="password" name="password2" class="form-control input">
-          </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">User Name</label>
+              <input type="text" class="form-control input" name="username" placeholder="create your user name">
+            </div>
 
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Spotify User ID</label>
-            <input type="number" class="form-control input" name="spotifyUserID">
-          </div>
-          <div>
-            <label class="control-label" for="button" style="float: left;">Already have an account? <a
-                href="/login">Login</a>
-            </label>
-          </div>
-          <br>
-          <div class="col-12">
-            <button class="btn btn-primary" type="submit">Register Now!</button>
-          </div>
-        </form>
-      </div>
-    </main>
 
-    <%- include ('../partials/footer') %>
+            <div class="mb-3">
+              <label for="inputPassword5" class="form-label">Password</label>
+              <input type="password" name="password1" class="form-control input" aria-describedby="passwordHelpBlock">
+              <div id="passwordHelpBlock" class="form-text">
+                Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces,
+                special characters, or emoji.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="inputPassword5" class="form-label">Confirm Password</label>
+              <input type="password" name="password2" class="form-control input">
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Spotify User ID</label>
+              <input type="number" class="form-control input" name="spotifyUserID">
+            </div>
+            <div>
+              <label class="control-label" for="button" style="float: left;">Already have an account? <a
+                  href="/login">Login</a>
+              </label>
+            </div>
+            <br>
+            <div class="col-12">
+              <button class="btn btn-primary" type="submit">Register Now!</button>
+            </div>
+          </form>
+        </div>
+      </main>
+
+      <%- include ('../partials/footer') %>
