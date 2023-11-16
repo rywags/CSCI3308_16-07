@@ -10,23 +10,18 @@
         <h2>
           <center>Create a New Post (all fields are required!)</center>
         </h2>
-        <form action="'/create_post'" method="POST"
+        <form action="/create_post" method="POST"
           style="display: block; width: 50%; margin: 0 auto; padding-top: 10px;">
 
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Post Title</label>
-            <input type="text" class="form-control" name="title" placeholder="enter the title of your post">
+            <label for="exampleFormControlInput1" class="form-label">Song</label>
+            <input type="url" class="form-control" id="songUrl" name="songUrl" placeholder="Spotify song url">
           </div>
 
           <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">description</label>
             <textarea class="form-control" id="description" name="description" rows="3"
-              placeholder="write down what you want to share"></textarea>
-          </div>
-
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Song</label>
-            <input type="url" class="form-control" name="song_url" placeholder="link of the song">
+              placeholder="Description..."></textarea>
           </div>
 
           <div class="col-12">
