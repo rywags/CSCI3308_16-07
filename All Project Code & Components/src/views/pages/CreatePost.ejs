@@ -1,39 +1,40 @@
 <%- include ('../partials/head') %>
   <%- include ('../partials/menu') %>
-    <%- include ('../partials/menu') %>
 
-      <main>
-        <div class="col"><%- include ('../partials/message') %></div>
-        <div class="container">
+    <main>
+      <div class="col"><%- include ('../partials/message') %></div>
+      <div class="container">
 
 
-          <!-- THE REST OF YOUR HTML CODE GOES HERE -->
+        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
         <h2>
-            <center>Create a New Post (all fields are required!)</center>
+          <center>Create a New Post (all fields are required!)</center>
         </h2>
-          <form action="'/create_post'" method="POST" style="display: block; width: 50%; margin: 0 auto; padding-top: 10px;">
+        <form action="'/create_post'" method="POST"
+          style="display: block; width: 50%; margin: 0 auto; padding-top: 10px;">
 
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Post Title</label>
-                <input type="text" class="form-control" name ="title" placeholder="enter the title of your post">
-              </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Post Title</label>
+            <input type="text" class="form-control" name="title" placeholder="enter the title of your post">
+          </div>
 
-              <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">description</label>
-                <textarea class="form-control" id="description" name="description" rows="3" placeholder="write down what you want to share"></textarea>
-              </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">description</label>
+            <textarea class="form-control" id="description" name="description" rows="3"
+              placeholder="write down what you want to share"></textarea>
+          </div>
 
-              <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Song</label>
-                <input type="url" class="form-control" name ="song_url" placeholder="link of the song">
-              </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Song</label>
+            <input type="url" class="form-control" name="song_url" placeholder="link of the song">
+          </div>
 
-              <div class="col-12">
-                <button class="btn btn-primary" type="submit">Post</button>
-              </div>
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Post</button>
+          </div>
 
-          </form>
-        </div>
-      </main>
+        </form>
+      </div>
+    </main>
 
-      <%- include ('../partials/footer') %>
+    <%- include ('../partials/footer') %>
