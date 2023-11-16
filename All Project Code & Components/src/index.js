@@ -156,7 +156,7 @@ app.get('/logout', auth, (req, res) => {
 });
 
 app.get('/create_post', auth, (req, res) => {
-    res.render('pages/create_song_post');
+    res.render('pages/create_post');
 });
 
 app.post('/create_post', auth, async (req, res) => {
