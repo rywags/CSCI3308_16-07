@@ -257,10 +257,36 @@ app.get('/discovery/:amount', auth, async (req, res) => {
 });
 
 app.get('/profile', auth, async (req, res) => {
-    res.render('pages/profile');
+    try {
+        const spotifyUserID = req.session.user.spotifyUserID;
+        const accessToken = await getAccessToken();
 
+        if (!accessToken) {
+            throw new Error('Failed to obtain access token');
+        }
 
+        const response = await axios.get(`https://api.spotify.com/v1/users/${spotifyUserID}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        const userProfile = response.data;
+
+        console.log('User Profile:', userProfile);
+
+        res.render('pages/profile', { userProfile });
+    } catch (error) {
+        console.error(error);
+        res.render('pages/profile', {
+            message: "Failed to fetch user profile",
+            error: true,
+            userProfile: null
+        });
+    }
 });
+
+
 
 // starting the server and keeping the connection open to listen for more requests
 module.exports = app.listen(3000);

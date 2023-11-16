@@ -1,12 +1,33 @@
 <%- include ('../partials/head') %>
-    <%- include ('../partials/menu') %>
+  <%- include ('../partials/menu') %>
 
-      <main>
-        <div class="col"><%- include ('../partials/message') %></div>
-        <div class="container">
+    <main>
+      <div class="col"><%- include ('../partials/message') %></div>
+      <div class="container">
+        <h2>User Profile</h2>
+        <% if (userProfile) { %>
+          <p>User ID: <%= userProfile.id %>
+          </p>
+          <p>Display Name: <%= userProfile.display_name %>
+          </p>
+          <p>Email: <%= userProfile.email %>
+          </p>
+          <p>Country: <%= userProfile.country %>
+          </p>
+          <p>Followers: <%= userProfile.followers.total %>
+          </p>
+          <p>Profile URL: <a href="<%= userProfile.external_urls.spotify %>" target="_blank">
+              <%= userProfile.external_urls.spotify %>
+            </a></p>
+          <% if (userProfile.images && userProfile.images.length> 0) { %>
+            <img src="<%= userProfile.images[0].url %>" alt="Profile Picture">
+            <% } else { %>
+              <p>No profile picture available</p>
+              <% } %>
+                <% } else { %>
+                  <p>Profile information not available</p>
+                  <% } %>
+      </div>
+    </main>
 
-          
-        </div>
-      </main>
-
-      <%- include ('../partials/footer') %>
+    <%- include ('../partials/footer') %>
