@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server.
+const SpotifyWebApi = require('spotify-web-api-node'); // To make requests to the Spotify API
 
 // database configuration
 const dbConfig = {
@@ -49,6 +50,12 @@ const user = {
     username: undefined,
     id: undefined
 }
+
+const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    redirectUri: 'http://localhost:3000/callback'
+});
 
 let accessToken = null;
 let tokenExpirationTime = null;
@@ -190,55 +197,33 @@ app.post('/create_post', auth, async (req, res) => {
 
 async function getTrackInfo(trackURL) {
     try {
-        const currentTime = new Date();
+        const currentTime = new Date().getTime();
         if (!accessToken || currentTime > tokenExpirationTime) {
-            const tokenData = await getAccessToken();
-            if (tokenData === null) {
-                throw new Error('Failed to get access token');
-            }
-            accessToken = tokenData.token;
-            tokenExpirationTime = new Date(currentTime.getTime() + tokenData.expires_in * 1000);
+            tokenExpirationTime = await refreshSpotifyToken();
         }
+
         const trackID = trackURL.split('?')[0].split('track/')[1];
-        const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackID}`, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-        return response.data;
+
+        const data = await spotifyApi.getTrack(trackID);
+        return data.body;
     } catch (error) {
-        console.error(error);
+        console.error('Error in getTrackInfo:', error);
+        throw error; // Rethrow the error to handle it in the calling function
     }
 }
 
-async function getAccessToken() {
-    const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-    const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-
-    console.log("Spotify Client ID: " + SPOTIFY_CLIENT_ID);
-    console.log("Spotify Client Secret: " + SPOTIFY_CLIENT_SECRET);
-
-
-
-
-    // Encode the credentials in base64
-    // const credentials = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`, 'utf-8').toString('base64');
-
+async function refreshSpotifyToken() {
     try {
-        const response = await axios.post(
-            'https://accounts.spotify.com/api/token',
-            `grant_type=client_credentials&client_id=${SPOTIFY_CLIENT_ID}&client_secret=${SPOTIFY_CLIENT_SECRET}`,
-            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-        );
-        console.log("Response from Spotify");
-        console.log(response.data);
-        return {
-            token: response.data.access_token,
-            expires_in: response.data.expires_in
-        };
+        const data = await spotifyApi.clientCredentialsGrant();
+        accessToken = data.body['access_token'];
+        spotifyApi.setAccessToken(data.body['access_token']);
+        console.log('The access token has been refreshed.');
+
+        // Return the new expiration time
+        return new Date().getTime() + data.body['expires_in'] * 1000;
     } catch (error) {
-        console.error(error);
-        return null;
+        console.error('Could not refresh access token', error);
+        throw error; // Rethrow the error to handle it in the calling function
     }
 }
 
