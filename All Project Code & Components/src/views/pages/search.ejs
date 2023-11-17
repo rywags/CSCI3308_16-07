@@ -4,36 +4,30 @@
 
         <div class="container">
             <h1>Search Users</h1>
-            <form action="/search" method="GET">
+            <form action="/search" method="POST">
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
                 </div>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
-
-            <% if (users.length > 0) { %>
+            
+            <% if (typeof users !== "undefined" && users.length > 0) { %>
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Username</th>
-                            <th>Email</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% users.forEach(function(user) { %>
                             <tr>
                                 <td><%= user.username %></td>
-                                <td><%= user.email %></td>
-                                <td><%= user.firstName %></td>
-                                <td><%= user.lastName %></td>
                             </tr>
                         <% }); %>
                     </tbody>
                 </table>
-            <% } else if (searched) { %>
+            <% } else { %>
                 <p>No users found.</p>
             <% } %>
         </div>

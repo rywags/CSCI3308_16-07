@@ -155,6 +155,26 @@ app.get('/logout', auth, (req, res) => {
     res.render('pages/login', { message: "Logged out Successfully" });
 });
 
+app.get('/search', (req, res) => {
+    res.render('pages/search');
+});
+
+app.post('/search', (req, res) => {
+    console.log("Here1");
+    const username = '%' + req.body.username + '%';
+    const query = `select * from users where username like $1`;
+    db.manyOrNone(query, [username])
+    .then((data)=> {
+        console.log("here");
+        console.log(data);
+        res.render('pages/search', { users: data });
+    })
+    .catch((err)=> {
+        console.log(err);
+        redirect('/search');
+    })
+});
+
 app.get('/create_post', auth, (req, res) => {
     res.render('pages/create_post');
 });
