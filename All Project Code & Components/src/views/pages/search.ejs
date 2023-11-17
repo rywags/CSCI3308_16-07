@@ -1,0 +1,19 @@
+<!-- FILEPATH: /Users/owen/Documents/CSCI 3308/CSCI3308_16-07/All Project Code & Components/src/views/pages/search.ejs -->
+        <%- include ('../partials/head') %>
+        <%- include('../partials/menu') %>
+        <main>
+            <!-- Create a search form that allows users to search for a specific username -->
+            <form action="/search" method="GET">
+                <input type="text" name="username" placeholder="Search for a username...">
+                <button type="submit">Search</button>
+            </form>
+
+            <!-- Display the search results -->
+            <h1>Search Results</h1>
+            <ul>
+                <% users.forEach(function(user) { %>
+                    <li><%= user.username %></li>
+                <% }); %>
+            </ul>
+        </main>
+        <%- include('../partials/footer') %>
