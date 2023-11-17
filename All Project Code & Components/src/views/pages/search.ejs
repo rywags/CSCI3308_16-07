@@ -11,25 +11,29 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
-            <% if (typeof users !=="undefined" && users.length> 0) { %>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% users.forEach(function(user) { %>
+            <<<<<<< HEAD <% if (typeof users !=="undefined" && users.length> 0) { %>
+                =======
+
+                <% if (typeof users !=="undefined" && users.length> 0) { %>
+                    >>>>>>> 4727793 (added search functionality)
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>
-                                    <%= user.username %>
-                                </td>
+                                <th>Username</th>
                             </tr>
-                            <% }); %>
-                    </tbody>
-                </table>
-                <% } else { %>
-                    <p>No users found.</p>
-                    <% } %>
+                        </thead>
+                        <tbody>
+                            <% users.forEach(function(user) { %>
+                                <tr>
+                                    <td>
+                                        <%= user.username %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p>No users found.</p>
+                        <% } %>
         </div>
         <%- include('../partials/footer') %>
