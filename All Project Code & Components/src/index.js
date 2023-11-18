@@ -334,15 +334,15 @@ app.post('/search', (req, res) => {
     const username = '%' + req.body.username + '%';
     const query = `select * from users where username like $1`;
     db.manyOrNone(query, [username])
-    .then((data)=> {
-        console.log("here");
-        console.log(data);
-        res.render('pages/search', { users: data });
-    })
-    .catch((err)=> {
-        console.log(err);
-        redirect('/search');
-    })
+        .then((data) => {
+            console.log("here");
+            console.log(data);
+            res.render('pages/search', { users: data });
+        })
+        .catch((err) => {
+            console.log(err);
+            redirect('/search');
+        })
 });
 
 app.get('/create_post', auth, (req, res) => {
@@ -381,7 +381,7 @@ app.post('/create_post', auth, setSessionAccessToken, getTrackInfo, async (req, 
 
 app.get('/discovery/:amount', auth, async (req, res) => {
     const amount = req.params.amount;
-    db.any(`SELECT * FROM posts ORDER BY post_id DESC LIMIT $1;`, [amount])
+    db.any(`SELECT * FROM posts INNER JOIN users ON users.user_id = posts.user_id ORDER BY post_id DESC LIMIT $1;`, [amount])
         .then((data) => {
             console.log(data);
             res.render('pages/home', { posts: data });
