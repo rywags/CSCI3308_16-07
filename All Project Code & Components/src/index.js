@@ -121,7 +121,7 @@ const setSessionAccessToken = async (req, res, next) => {
 
 const updateFromSpotifyProfile = async (req, res, next) => {
     console.log("updating profile");
-    const profile_picture = "https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
+    let profile_picture = "https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
     if (res.locals.spotify_user_info.images.length !== 0) {
         profile_picture = res.locals.spotify_user_info.images[0].url;
     }
