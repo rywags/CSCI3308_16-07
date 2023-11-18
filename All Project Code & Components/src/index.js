@@ -119,21 +119,42 @@ const setSessionAccessToken = async (req, res, next) => {
 };
 
 
-const updateProfile = async (req, res, next) => {
+const updateFromSpotifyProfile = async (req, res, next) => {
     console.log("updating profile");
+    const profile_picture = "https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
+    if (res.locals.spotify_user_info.images.length !== 0) {
+        profile_picture = res.locals.spotify_user_info.images[0].url;
+    }
     const tracks = res.locals.tracks;
     const artists = res.locals.artists;
-    db.none('UPDATE users SET top_songs = $1, top_artists = $2 WHERE username = $3;', [tracks, artists, req.session.user.username])
-    .then(() => {
-        console.log('Profile updated successfully');
+    db.none('UPDATE users SET top_songs = $1, top_artists = $2, profile_picture = $3 WHERE username = $4;', [tracks, artists, profile_picture, req.session.user.username])
+        .then(() => {
+            console.log('Profile updated successfully');
+            next();
+        }).catch((error) => {
+            console.error(error);
+            res.render('pages/home', {
+                message: "Failed to update profile",
+                error: true
+            });
+        });
+};
+
+const getSpotifyInfo = async (req, res, next) => {
+    console.log("getting profile info from spotify");
+    try {
+        spotifyApi.setAccessToken(req.session.user.spotify_access_token);
+        const data = await spotifyApi.getMe();
+        console.log(data.body);
+        res.locals.spotify_user_info = data.body;
         next();
-    }).catch((error) => {  
-        console.error(error);
+    } catch (error) {
+        console.error('Error in getSpotifyInfo:', error);
         res.render('pages/home', {
-            message: "Failed to update profile",
+            message: "Failed to get spotify user info",
             error: true
         });
-    });
+    }
 };
 
 const getTopTracks = async (req, res, next) => {
@@ -218,7 +239,7 @@ app.get('/login', (req, res) => {
     res.render('pages/login');
 });
 
-app.post('/login', login, setSessionAccessToken, getTopTracks, getTopArtists, updateProfile, (req, res) => {
+app.post('/login', login, setSessionAccessToken, getTopTracks, getTopArtists, getSpotifyInfo, updateFromSpotifyProfile, (req, res) => {
     res.redirect('/');
 });
 
@@ -390,51 +411,51 @@ app.get('/profile', auth, async (req, res) => {
 });
 
 // The callback after the user has authenticated
-app.get('/callback', function(req, res) {
+app.get('/callback', function (req, res) {
     const error = req.query.error;
     const code = req.query.code;
     const state = req.query.state;
-  
+
     if (error) {
-      console.error('Callback Error:', error);
-      res.send(`Callback Error: ${error}`);
-      return;
+        console.error('Callback Error:', error);
+        res.send(`Callback Error: ${error}`);
+        return;
     }
-  
+
     spotifyApi.authorizationCodeGrant(code).then(
-      function(data) {
-        const access_token = data.body['access_token'];
-        const refresh_token = data.body['refresh_token'];
-        const expires_in = data.body['expires_in'];
+        function (data) {
+            const access_token = data.body['access_token'];
+            const refresh_token = data.body['refresh_token'];
+            const expires_in = data.body['expires_in'];
 
-        // necessary?
-        user = {
-            username: req.session.user.username,
-            spotify_access_token: access_token,
-            spotify_refresh_token: refresh_token,
-            tokenExpirationTime: new Date().getTime() + expires_in * 1000
-        }
+            // necessary?
+            user = {
+                username: req.session.user.username,
+                spotify_access_token: access_token,
+                spotify_refresh_token: refresh_token,
+                tokenExpirationTime: new Date().getTime() + expires_in * 1000
+            }
 
-        req.session.user = user;
-        req.session.save();
+            req.session.user = user;
+            req.session.save();
 
-        db.none('UPDATE users SET spotify_refresh_token = $1 WHERE username = $2;', [refresh_token, req.session.user.username])
-        .catch((error) => {
-            throw error;
-        });
+            db.none('UPDATE users SET spotify_refresh_token = $1 WHERE username = $2;', [refresh_token, req.session.user.username])
+                .catch((error) => {
+                    throw error;
+                });
 
-        res.redirect('/login');
-      }).catch(
-      function(err) {
-        console.error('Error getting Tokens:', err);
-        // delete user from database
-        db.none('DELETE FROM users WHERE username = $1;', req.session.user.username)
-        res.render('pages/register', {
-            message: "Failed to authenticate",
-            error: true
-        });
-      }
-    );
+            res.redirect('/login');
+        }).catch(
+            function (err) {
+                console.error('Error getting Tokens:', err);
+                // delete user from database
+                db.none('DELETE FROM users WHERE username = $1;', req.session.user.username)
+                res.render('pages/register', {
+                    message: "Failed to authenticate",
+                    error: true
+                });
+            }
+        );
 });
 
 

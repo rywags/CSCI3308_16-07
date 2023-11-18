@@ -3,31 +3,96 @@
 
     <main>
       <div class="col"><%- include ('../partials/message') %></div>
-      <div class="container">
-        <h2>User Profile</h2>
-        <% if (userProfile) { %>
-          <p>User ID: <%= userProfile.id %>
+      <div class="container"
+        style="display: block; width: 70%; height: 100vh; padding-top: 2rem; background-color: rgb(255, 255, 255); box-shadow: 0px 10px 20px rgba(0,0,0,0.2);">
+        <div class="row align-items-center"
+          style="padding-top: 2rem; padding-left: 4rem; padding-right: 4rem; width: fit-content">
+          <div class="col-2">
+            <img src="<%= user.profile_picture %>" alt="profile picture" style="width: 100%; height: auto;">
+          </div>
+          <div class="col">
+            <h1>
+              <%= user.username %>
+            </h1>
+          </div>
+          <div class="col">
+            <h2>
+              Followers: <%= user.followers %>
+            </h2>
+          </div>
+          <div class="col">
+            <h2>
+              Following: <%= user.following %>
+            </h2>
+          </div>
+          <p>
+            <%= user.bio %>
           </p>
-          <p>Display Name: <%= userProfile.display_name %>
-          </p>
-          <p>Email: <%= userProfile.email %>
-          </p>
-          <p>Country: <%= userProfile.country %>
-          </p>
-          <p>Followers: <%= userProfile.followers.total %>
-          </p>
-          <p>Profile URL: <a href="<%= userProfile.external_urls.spotify %>" target="_blank">
-              <%= userProfile.external_urls.spotify %>
-            </a></p>
-          <% if (userProfile.images && userProfile.images.length> 0) { %>
-            <img src="<%= userProfile.images[0].url %>" alt="Profile Picture">
-            <% } else { %>
-              <p>No profile picture available</p>
-              <% } %>
-                <% } else { %>
-                  <p>Profile information not available</p>
-                  <% } %>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-6 d-flex flex-column align-items-center">
+              <h1>
+                Top Songs
+              </h1>
+              <div class="container d-flex flex-column align-items-center">
+                <% topTracks.items.forEach(function(song) { %>
+                  <div class=" card" style="width: 18rem; border-radius: 0px;">
+                    <div class="card-body d-flex">
+                      <img src="<%= song.album.images[0].url %>" alt="Album cover"
+                        style="width: 100px; height: 100px; margin-right: 20px;">
+                      <div>
+                        <h5 class="card-title">
+                          <%= song.name %>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                          <%= song.artists[0].name %>
+                        </h6>
+                        <p class="card-text">Popularity: <%= song.popularity %>
+                        </p>
+
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                      <a href="<%= song.href %>" class="card-link">Listen on Spotify</a>
+                      <a href="<%= song.preview_url %>" class="card-link">Preview</a>
+                    </div>
+                  </div>
+                  <% }); %>
+              </div>
+
+            </div>
+            <div class="col-6 d-flex flex-column align-items-center">
+              <h1>
+                Top Artists
+              </h1>
+              <div class="container d-flex flex-column align-items-center">
+                <% topArtists.items.forEach(function(artist) { %>
+                  <div class="card" style="width: 18rem; border-radius: 0px;">
+                    <div class="card-body d-flex">
+                      <img src="<%= artist.images[0].url %>" alt="Artist picture"
+                        style="width: 100px; height: 100px; margin-right: 20px;">
+                      <div>
+                        <h5 class="card-title">
+                          <%= artist.name %>
+                        </h5>
+                        <p class="card-text">Popularity: <%= artist.popularity %>
+                        </p>
+                        <p class="card-text">Genres: <%= artist.genres.join(', ') %></p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="<%= artist.external_urls.spotify %>" class="card-link">Listen on Spotify</a>
+                            <a href="<%= artist.href %>" class="card-link">Artist Profile</a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </main>
 
     <%- include ('../partials/footer') %>
