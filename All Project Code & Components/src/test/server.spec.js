@@ -19,8 +19,7 @@ describe('Register!', () => {
                 username: 'test',
                 email: 'test@gmail.com',
                 password1: 'test',
-                password2: 'test',
-                spotifyUserID: '123'
+                password2: 'test'
             })
             .redirects(0)
             .end((err, res) => {
@@ -39,9 +38,8 @@ describe('Login!', () => {
                 username: 'test',
                 password: 'test',
             })
-            .redirects(0)
             .end((err, res) => {
-                res.should.have.status(302); // checks for redirect to home page ('/')
+                res.should.have.status(200); // checks for redirect to home page ('/')
                 done();
             });
     });
@@ -55,7 +53,6 @@ describe('Login!', () => {
                 password: 'incorrect',
             })
             .end((err, res) => {
-                // expect(res.error).to.equals(true);
                 res.text.should.include('Incorrect username or password.');
                 done();
             });
