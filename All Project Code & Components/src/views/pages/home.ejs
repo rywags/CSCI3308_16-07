@@ -8,58 +8,94 @@
                     <% if (typeof posts !=="undefined" ) { %>
                         <% posts.forEach(post=> { %>
                             <div class="col-12">
-                                <div class="card mx-auto"
-                                    style="max-width: 600px; width: 100%; height: 750px; border-radius: 0px;">
-                                    <div class="card-header">
-                                        <div class="row d-flex align-items-center">
-                                            <div class="col-auto">
-                                                <img src="<%= post.profile_picture %>"
-                                                    style="width: 50px; height: 50px; border-radius: 50%;">
-                                            </div>
-                                            <div class="col-auto">
-                                                <a href=""
-                                                    style="color: black; text-decoration: none; font-weight: bold;">
-                                                    <%= post.username %>
-                                                </a>
-                                            </div>
+                                <div class="container"
+                                    style="position: relative; max-width: 390px; width: 100%; height: fit-content; padding: 0px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">
+                                    <div class="col"
+                                        style="width: 100%; height: fit-content; border-color: black; border-width: 1px; border-style: solid; padding: 12px;">
+                                        <h2
+                                            style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px; padding-bottom: 4px;">
+                                            <%= post.song_name %>
+                                        </h2>
+                                        <p
+                                            style="font-size: 12px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                            <%= post.artist %>
+                                        </p>
+                                    </div>
+                                    <div class="col"
+                                        style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; overflow: hidden;">
+                                        <img src="<%= post.img_url %>" width="100%"></img>
+                                    </div>
+                                    <div class="col"
+                                        style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; padding: 12px; padding-bottom: 16px;">
+                                        <div class="d-flex align-items-center" style="padding-bottom: 12px;">
+                                            <img src="<%= post.profile_picture %>" width="32px" height="32px"
+                                                style="border-radius: 50%; margin-right: 10px;">
+                                            <h2
+                                                style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px;">
+                                                <%= post.username %>
+                                            </h2>
+                                        </div>
+                                        <div>
+                                            <p
+                                                style="font-size: 14px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                                <%= post.description %>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="card-body" style="
-                                        background-image: url('<%= post.img_url %>'); 
-                                        background-position: center; 
-                                        background-repeat: no-repeat; 
-                                        background-size: cover; 
-                                        height: 100vh;">
-                                        <!-- Content over the background image -->
-                                    </div>
-                                    <div class="card-footer">
-                                        <!-- song name with link and song artist and description/caption -->
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <a href="<%= post.song_url %>"
-                                                    style="color: black; text-decoration: none;">
-                                                    <h5>
-                                                        <%= post.song_name %>
-                                                    </h5>
-                                                </a>
-                                            </div>
-                                            <div class="col-12">
-                                                <p>
-                                                    <%= post.artist %>
-                                                </p>
-                                            </div>
-                                            <div class="col-12">
-                                                <p>
-                                                    <%= post.description %>
-                                                </p>
-                                            </div>
+                                    <div class="col"
+                                        style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; padding: 12px;">
+                                        <div class="d-flex align-items-center justify-content-between"
+                                            style="padding-bottom: 12px;">
+                                            <p
+                                                style="font-size: 14px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                                Comments
+                                            </p>
+                                            <button type="button"
+                                                style="background: none; border: none; padding: 4px 8px; font-size: 14px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <p
+                                                style="font-size: 14px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                                comments...
+                                            </p>
+                                        </div>
+                                        <div style="position: absolute;
+                                                right: 12px;
+                                                bottom: 148px;
+                                                width: 60px;
+                                                height: 60px;">
+                                            <button onclick="window.location.href='<%= post.song_url %>'"
+                                                style="width: 100%; height: 100%; border: none; background: none; padding: 0; display: flex; justify-content: center; align-items: center; position: relative;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="61" height="61"
+                                                    viewBox="0 0 61 61" fill="none">
+                                                    <circle cx="30.0828" cy="30.6958" r="29.5" fill="white"
+                                                        stroke="black" />
+                                                </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                    fill="black" class="bi bi-play-fill" viewBox="0 0 16 16"
+                                                    style="z-index: 1; position: absolute; transform: translateX(1px);">
+                                                    <path
+                                                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                                                </svg>
+                                            </button>
                                         </div>
                                     </div>
+                                </div>
+                                <div
+                                    style="display: flex; justify-content: center; padding-top: 48px; padding-bottom: 48px;">
+                                    <hr
+                                        style="max-width: 390px; width: 100%; border: 0; border-top: 1px solid black; height: 1px; margin: 0;">
                                 </div>
                             </div>
                             <% }); %>
                                 <% } else { %>
-                                    <div class="col-12">
+                                    <div class=" col-12">
                                         <h1>No Posts Found</h1>
                                     </div>
                                     <% } %>
