@@ -1,0 +1,17 @@
+Meeting 3:
+What we did
+Fixed Spotify API
+When registering, connecting your account to the API works
+Preview of songs works, going to website should work
+Improved Post UI
+
+
+Main Focus for next sprint:
+Is there an API that could search the song in the website, instead of getting an external link? Should be able to type a song name and have a drop-down
+Add the above into a search bar in the post-screen (“Dynamic Search”)
+Improve UI
+Overall Appearance
+Dynamic Search Libraries
+Add some spice
+Test Cases
+Finalize release notes and Post test case
