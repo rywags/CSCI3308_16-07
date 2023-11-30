@@ -1,6 +1,6 @@
 <!-- FILEPATH: /Users/owen/Documents/CSCI 3308/CSCI3308_16-07/All Project Code & Components/src/views/pages/search.ejs -->
-        <%- include ('../partials/head') %>
-        <%- include('../partials/menu') %>
+<%- include ('../partials/head') %>
+    <%- include('../partials/menu') %>
 
         <div class="container">
             <h1>Search Users</h1>
@@ -11,8 +11,8 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
-            
-            <% if (typeof users !== "undefined" && users.length > 0) { %>
+
+            <% if (typeof users !=="undefined" && users.length> 0) { %>
                 <table class="table">
                     <thead>
                         <tr>
@@ -22,14 +22,15 @@
                     <tbody>
                         <% users.forEach(function(user) { %>
                             <tr>
-                                <td><%= user.username %></td>
+                                <td>
+                                    <%= user.username %>
+                                </td>
                             </tr>
-                        <% }); %>
+                            <% }); %>
                     </tbody>
                 </table>
-            <% } else { %>
-                <p>No users found.</p>
-            <% } %>
+                <% } else { %>
+                    <p>No users found.</p>
+                    <% } %>
         </div>
-
         <%- include('../partials/footer') %>
