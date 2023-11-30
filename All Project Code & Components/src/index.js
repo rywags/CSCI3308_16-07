@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server.
+const SpotifyWebApi = require('spotify-web-api-node'); // To make requests to the Spotify API
 
 // database configuration
 const dbConfig = {
@@ -45,13 +46,189 @@ app.use(
     })
 );
 
-const user = {
+let user = {
     username: undefined,
-    id: undefined
+    id: undefined,
+    spotify_access_token: undefined,
+    spotify_refresh_token: undefined,
+    tokenExpirationTime: undefined
 }
 
-let accessToken = null;
-let tokenExpirationTime = null;
+const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    redirectUri: 'http://localhost:3000/callback'
+});
+
+const scopes = ['user-read-private', 'user-read-email', 'user-top-read'];
+const state = "some-state-of-my-choice";
+
+// Middleware functions
+
+const getTrackInfo = async (req, res, next) => {
+    console.log("getting TrackInfo")
+    try {
+        const trackURL = req.body.songUrl;
+        spotifyApi.setAccessToken(req.session.user.spotify_access_token);
+
+        const trackID = trackURL.split('?')[0].split('track/')[1];
+
+        const data = await spotifyApi.getTrack(trackID);
+        res.locals.trackInfo = data.body;
+        next();
+    } catch (error) {
+        console.error('Error in getTrackInfo:', error);
+        res.render('pages/home', {
+            message: "Failed to get track info from song link",
+            error: true
+        });
+    }
+};
+
+// Sets new access token in the session if the current one is expired or it hasn't been set yet
+const setSessionAccessToken = async (req, res, next) => {
+    console.log("setting session access token");
+    try {
+        const currentTime = new Date().getTime();
+        if (!req.session.accessToken || currentTime > tokenExpirationTime) {
+            console.log(req.session.user.spotify_refresh_token);
+            spotifyApi.setRefreshToken(req.session.user.spotify_refresh_token);
+            data = await spotifyApi.refreshAccessToken();
+
+            user = {
+                username: req.session.user.username,
+                id: req.session.user.id,
+                spotify_access_token: data.body['access_token'],
+                spotify_refresh_token: req.session.user.spotify_refresh_token,
+                tokenExpirationTime: new Date().getTime() + data.body['expires_in'] * 1000
+            };
+
+            req.session.user = user;
+            req.session.save();
+            console.log('The session access token has been refreshed.');
+        }
+        console.log('The session access token did not need to be refreshed.');
+        next();
+    } catch (error) {
+        console.log(error);
+        res.render('pages/home', {
+            message: "Failed to refresh access token",
+            error: true
+        });
+    }
+};
+
+
+const updateFromSpotifyProfile = async (req, res, next) => {
+    console.log("updating profile");
+    let profile_picture = "https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
+    if (res.locals.spotify_user_info.images.length !== 0) {
+        profile_picture = res.locals.spotify_user_info.images[0].url;
+    }
+    const tracks = res.locals.tracks;
+    const artists = res.locals.artists;
+    db.none('UPDATE users SET top_songs = $1, top_artists = $2, profile_picture = $3 WHERE username = $4;', [tracks, artists, profile_picture, req.session.user.username])
+        .then(() => {
+            console.log('Profile updated successfully');
+            next();
+        }).catch((error) => {
+            console.error(error);
+            res.render('pages/home', {
+                message: "Failed to update profile",
+                error: true
+            });
+        });
+};
+
+const getSpotifyInfo = async (req, res, next) => {
+    console.log("getting profile info from spotify");
+    try {
+        spotifyApi.setAccessToken(req.session.user.spotify_access_token);
+        const data = await spotifyApi.getMe();
+        console.log(data.body);
+        res.locals.spotify_user_info = data.body;
+        next();
+    } catch (error) {
+        console.error('Error in getSpotifyInfo:', error);
+        res.render('pages/home', {
+            message: "Failed to get spotify user info",
+            error: true
+        });
+    }
+};
+
+const getTopTracks = async (req, res, next) => {
+    console.log("getting top tracks");
+    try {
+        spotifyApi.setAccessToken(req.session.user.spotify_access_token);
+
+        const options = {
+            limit: 3,
+        }
+
+        const data = await spotifyApi.getMyTopTracks(options);
+        console.log(data.body);
+        res.locals.tracks = data.body;
+        next();
+    } catch (error) {
+        console.error('Error in getTopTracks:', error);
+        res.render('pages/home', {
+            message: "Failed to get top tracks",
+            error: true
+        });
+    }
+};
+
+const getTopArtists = async (req, res, next) => {
+    console.log("getting top artists");
+    try {
+        spotifyApi.setAccessToken(req.session.user.spotify_access_token);
+
+        const options = {
+            limit: 3,
+        }
+
+        const data = await spotifyApi.getMyTopArtists(options);
+        console.log(data.body);
+        res.locals.artists = data.body;
+        next();
+    } catch (error) {
+        console.error('Error in getTopArtists:', error);
+        res.render('pages/home', {
+            message: "Failed to get top artists",
+            error: true
+        });
+    }
+};
+
+const login = async (req, res, next) => {
+    console.log("logging in");
+    await db.one('SELECT * FROM users WHERE username = $1;', req.body.username)
+        .then(async (data) => {
+            const match = await bcrypt.compare(req.body.password, data.password);
+            if (match) {
+                user = {
+                    username: data.username,
+                    spotify_refresh_token: data.spotify_refresh_token,
+                    id: data.user_id
+                };
+                req.session.user = user;
+                req.session.save();
+                next();
+            } else {
+                res.render('pages/login', {
+                    message: "Incorrect username or password.",
+                    error: true
+                });
+            }
+        }).catch((error) => {
+            console.log(error);
+            res.render('pages/login', {
+                message: "User not found. Please check your username.",
+                error: true
+            });
+        });
+};
 
 //TODO: Implement Endpoints
 app.get('/', (req, res) => {
@@ -62,29 +239,8 @@ app.get('/login', (req, res) => {
     res.render('pages/login');
 });
 
-app.post('/login', async (req, res) => {
-    await db.one('SELECT * FROM users WHERE username = $1;', req.body.username)
-        .then(async (data) => {
-            const match = await bcrypt.compare(req.body.password, data.password);
-            if (match) {
-                user.username = req.body.username;
-                user.id = data.user_id;
-                req.session.user = user;
-                req.session.save();
-                // res.json({ message: "Logged in successfully" });
-                res.redirect('/');
-            } else {
-                res.render('pages/login', {
-                    message: "Incorrect username or password.",
-                    error: true
-                });
-            }
-        }).catch((error) => {
-            res.render('pages/login', {
-                message: "User not found. Please check your username.",
-                error: true
-            });
-        });
+app.post('/login', login, setSessionAccessToken, getTopTracks, getTopArtists, getSpotifyInfo, updateFromSpotifyProfile, (req, res) => {
+    res.redirect('/');
 });
 
 app.get('/register', (req, res) => {
@@ -92,7 +248,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    if (!req.body.username || !req.body.email || !req.body.password1 || !req.body.password2 || !req.body.spotifyUserID) {
+    if (!req.body.username || !req.body.email || !req.body.password1 || !req.body.password2) {
         res.render('pages/register', {
             message: "Missing fields.",
             error: true
@@ -116,11 +272,19 @@ app.post('/register', async (req, res) => {
             return;
         }
         const hash = await bcrypt.hash(req.body.password1, 10);
-        const addUser = 'INSERT INTO users (username, email, password, spotify_user_id) VALUES ($1, $2, $3, $4)';
-        const userInfo = [req.body.username.trim(), req.body.email.trim(), hash, req.body.spotifyUserID];
+        const addUser = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
+        const userInfo = [req.body.username.trim(), req.body.email.trim(), hash];
         await db.none(addUser, userInfo)
             .then(() => {
-                res.redirect('/login');
+                user = {
+                    username: req.body.username.trim(),
+                    spotify_refresh_token: undefined,
+                    id: undefined,
+                    tokenExpirationTime: undefined
+                }
+                req.session.user = user;
+                req.session.save();
+                res.redirect(spotifyApi.createAuthorizeURL(scopes, state));
             }).catch((error) => {
                 console.error(error);
                 res.render('pages/register', {
@@ -151,6 +315,12 @@ const auth = (req, res, next) => {
 
 app.get('/logout', auth, (req, res) => {
     user.username = undefined;
+    user.id = undefined;
+    user.spotify_access_token = undefined;
+    user.spotify_refresh_token = undefined;
+    user.tokenExpirationTime = undefined;
+    spotifyApi.resetAccessToken();
+    spotifyApi.resetRefreshToken();
     req.session.destroy();
     res.render('pages/login', { message: "Logged out Successfully" });
 });
@@ -164,26 +334,27 @@ app.post('/search', (req, res) => {
     const username = '%' + req.body.username + '%';
     const query = `select * from users where username like $1`;
     db.manyOrNone(query, [username])
-    .then((data)=> {
-        console.log("here");
-        console.log(data);
-        res.render('pages/search', { users: data });
-    })
-    .catch((err)=> {
-        console.log(err);
-        redirect('/search');
-    })
+      .then((data) => {
+          console.log("here");
+          console.log(data);
+          res.render('pages/search', { users: data });
+      })
+      .catch((err) => {
+          console.log(err);
+          redirect('/search');
+      })
 });
 
 app.get('/create_post', auth, (req, res) => {
     res.render('pages/create_post');
 });
 
-app.post('/create_post', auth, async (req, res) => {
+app.post('/create_post', auth, setSessionAccessToken, getTrackInfo, async (req, res) => {
 
     try {
-        const { songUrl, description } = req.body;
-        const trackInfo = await getTrackInfo(songUrl);
+        const description = req.body.description;
+        const songUrl = req.body.songUrl;
+        const trackInfo = res.locals.trackInfo;
         const postInfo = {
             user_id: req.session.user.id,
             song_name: trackInfo.name,
@@ -208,64 +379,11 @@ app.post('/create_post', auth, async (req, res) => {
     }
 });
 
-async function getTrackInfo(trackURL) {
-    try {
-        const currentTime = new Date();
-        if (!accessToken || currentTime > tokenExpirationTime) {
-            const tokenData = await getAccessToken();
-            if (tokenData === null) {
-                throw new Error('Failed to get access token');
-            }
-            accessToken = tokenData.token;
-            tokenExpirationTime = new Date(currentTime.getTime() + tokenData.expires_in * 1000);
-        }
-        const trackID = trackURL.split('?')[0].split('track/')[1];
-        const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackID}`, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function getAccessToken() {
-    const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-    const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-
-    console.log("Spotify Client ID: " + SPOTIFY_CLIENT_ID);
-    console.log("Spotify Client Secret: " + SPOTIFY_CLIENT_SECRET);
-
-
-
-
-    // Encode the credentials in base64
-    // const credentials = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`, 'utf-8').toString('base64');
-
-    try {
-        const response = await axios.post(
-            'https://accounts.spotify.com/api/token',
-            `grant_type=client_credentials&client_id=${SPOTIFY_CLIENT_ID}&client_secret=${SPOTIFY_CLIENT_SECRET}`,
-            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-        );
-        console.log("Response from Spotify");
-        console.log(response.data);
-        return {
-            token: response.data.access_token,
-            expires_in: response.data.expires_in
-        };
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-}
-
 app.get('/discovery/:amount', auth, async (req, res) => {
     const amount = req.params.amount;
-    const posts = await db.any(`SELECT * FROM posts ORDER BY post_id DESC LIMIT $1;`, [amount])
+    db.any(`SELECT * FROM posts INNER JOIN users ON users.user_id = posts.user_id ORDER BY post_id DESC LIMIT $1;`, [amount])
         .then((data) => {
+            console.log(data);
             res.render('pages/home', { posts: data });
         }).catch((error) => {
             res.render('pages/home', {
@@ -277,37 +395,76 @@ app.get('/discovery/:amount', auth, async (req, res) => {
 });
 
 app.get('/profile', auth, async (req, res) => {
-    try {
-        const spotifyUserID = req.session.user.spotifyUserID;
-        const accessToken = await getAccessToken();
-
-        if (!accessToken) {
-            throw new Error('Failed to obtain access token');
-        }
-
-        const response = await axios.get(`https://api.spotify.com/v1/users/${spotifyUserID}`, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
+    db.one('SELECT * FROM users WHERE username = $1;', req.session.user.username)
+        .then(async (data) => {
+            console.log(data);
+            console.log(data.top_songs);
+            console.log(data.top_artists);
+            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists });
+        }).catch((error) => {
+            console.error(error);
+            res.render('pages/profile', {
+                message: "Failed to get profile",
+                error: true
+            });
         });
-
-        const userProfile = response.data;
-
-        console.log('User Profile:', userProfile);
-
-        res.render('pages/profile', { userProfile });
-    } catch (error) {
-        console.error(error);
-        res.render('pages/profile', {
-            message: "Failed to fetch user profile",
-            error: true,
-            userProfile: null
-        });
-    }
 });
+
+// The callback after the user has authenticated
+app.get('/callback', function (req, res) {
+    const error = req.query.error;
+    const code = req.query.code;
+    const state = req.query.state;
+
+    if (error) {
+        console.error('Callback Error:', error);
+        res.send(`Callback Error: ${error}`);
+        return;
+    }
+
+    spotifyApi.authorizationCodeGrant(code).then(
+        function (data) {
+            const access_token = data.body['access_token'];
+            const refresh_token = data.body['refresh_token'];
+            const expires_in = data.body['expires_in'];
+
+            // necessary?
+            user = {
+                username: req.session.user.username,
+                spotify_access_token: access_token,
+                spotify_refresh_token: refresh_token,
+                tokenExpirationTime: new Date().getTime() + expires_in * 1000
+            }
+
+            req.session.user = user;
+            req.session.save();
+
+            db.none('UPDATE users SET spotify_refresh_token = $1 WHERE username = $2;', [refresh_token, req.session.user.username])
+                .catch((error) => {
+                    throw error;
+                });
+
+            res.redirect('/login');
+        }).catch(
+            function (err) {
+                console.error('Error getting Tokens:', err);
+                // delete user from database
+                db.none('DELETE FROM users WHERE username = $1;', req.session.user.username)
+                res.render('pages/register', {
+                    message: "Failed to authenticate",
+                    error: true
+                });
+            }
+        );
+});
+
+
+
+
 
 
 
 // starting the server and keeping the connection open to listen for more requests
 module.exports = app.listen(3000);
+
 console.log('Server is listening on port 3000');

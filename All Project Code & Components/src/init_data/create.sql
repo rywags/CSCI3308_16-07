@@ -4,7 +4,13 @@ CREATE TABLE users (
     username VARCHAR(255) UNIQUE,
     email VARCHAR(255) UNIQUE,
     password VARCHAR(512),
-    spotify_user_id VARCHAR(255),
+    bio TEXT DEFAULT '-bio-',
+    profile_picture VARCHAR(2000) DEFAULT 'https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg',
+    followers INT DEFAULT 0,
+    following INT DEFAULT 0,
+    top_songs JSONB,
+    top_artists JSONB,
+    spotify_refresh_token VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_login TIMESTAMP
 );
@@ -26,3 +32,4 @@ CREATE TABLE posts (
         FOREIGN KEY(user_id) 
         REFERENCES users (user_id) ON DELETE CASCADE
 );
+

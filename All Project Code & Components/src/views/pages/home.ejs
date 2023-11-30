@@ -2,58 +2,67 @@
     <%- include ('../partials/menu') %>
 
         <main>
+            <div class="col"><%- include ('../partials/message') %></div>
             <div class="container mt-4">
                 <div class="row">
-                    <% posts.forEach(post=> { %>
-                        <div class="col-12">
-                            <div class="card mx-auto"
-                                style="max-width: 600px; width: 100%; height: 750px; border-radius: 0px;">
-                                <div class="card-header">
-                                    <div class="row d-flex align-items-center">
-                                        <div class="col-2">
-                                            <img src="https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg"
-                                                style="width: 50px; height: 50px; border-radius: 50%;">
-                                        </div>
-                                        <div class="col-10">
-                                            <a href="" style="color: black; text-decoration: none; font-weight: bold;">
-                                                Username
-                                            </a>
+                    <% if (typeof posts !=="undefined" ) { %>
+                        <% posts.forEach(post=> { %>
+                            <div class="col-12">
+                                <div class="card mx-auto"
+                                    style="max-width: 600px; width: 100%; height: 750px; border-radius: 0px;">
+                                    <div class="card-header">
+                                        <div class="row d-flex align-items-center">
+                                            <div class="col-auto">
+                                                <img src="<%= post.profile_picture %>"
+                                                    style="width: 50px; height: 50px; border-radius: 50%;">
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href=""
+                                                    style="color: black; text-decoration: none; font-weight: bold;">
+                                                    <%= post.username %>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card-body" style="
-                                    background-image: url('<%= post.img_url %>'); 
-                                    background-position: center; 
-                                    background-repeat: no-repeat; 
-                                    background-size: cover; 
-                                    height: 100vh;">
-                                    <!-- Content over the background image -->
-                                </div>
-                                <div class="card-footer">
-                                    <!-- song name with link and song artist and description/caption -->
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <a href="<%= post.song_url %>" style="color: black; text-decoration: none;">
-                                                <h5>
-                                                    <%= post.song_name %>
-                                                </h5>
-                                            </a>
-                                        </div>
-                                        <div class="col-12">
-                                            <p>
-                                                <%= post.artist %>
-                                            </p>
-                                        </div>
-                                        <div class="col-12">
-                                            <p>
-                                                <%= post.description %>
-                                            </p>
+                                    <div class="card-body" style="
+                                        background-image: url('<%= post.img_url %>'); 
+                                        background-position: center; 
+                                        background-repeat: no-repeat; 
+                                        background-size: cover; 
+                                        height: 100vh;">
+                                        <!-- Content over the background image -->
+                                    </div>
+                                    <div class="card-footer">
+                                        <!-- song name with link and song artist and description/caption -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <a href="<%= post.song_url %>"
+                                                    style="color: black; text-decoration: none;">
+                                                    <h5>
+                                                        <%= post.song_name %>
+                                                    </h5>
+                                                </a>
+                                            </div>
+                                            <div class="col-12">
+                                                <p>
+                                                    <%= post.artist %>
+                                                </p>
+                                            </div>
+                                            <div class="col-12">
+                                                <p>
+                                                    <%= post.description %>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <% }); %>
+                            <% }); %>
+                                <% } else { %>
+                                    <div class="col-12">
+                                        <h1>No Posts Found</h1>
+                                    </div>
+                                    <% } %>
                 </div>
             </div>
         </main>
