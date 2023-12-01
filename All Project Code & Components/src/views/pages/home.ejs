@@ -45,12 +45,13 @@
                                     <div class="col"
                                         style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; padding: 12px;">
                                         <div class="d-flex align-items-center justify-content-between"
-                                            style="padding-bottom: 12px;">
+                                            style="padding-bottom: 8px;">
                                             <p
                                                 style="font-size: 14px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
                                                 Comments
                                             </p>
                                             <button type="button"
+                                                onclick="window.location.href='/post/comments/<%= post.post_post_id %>'"
                                                 style="background: none; border: none; padding: 4px 8px; font-size: 14px;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
@@ -59,32 +60,43 @@
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div>
-                                            <p
-                                                style="font-size: 14px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
-                                                comments...
-                                            </p>
-                                        </div>
-                                        <div style="position: absolute;
+                                        <% if (post.comment !==null) { %>
+                                            <div>
+                                                <p
+                                                    style="font-size: 14px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                                    <%= post.comment.length> 50 ? post.comment.slice(0, 50) :
+                                                        post.comment %>...
+                                                </p>
+                                            </div>
+                                            <% } else { %>
+                                                <div>
+                                                    <p
+                                                        style="font-size: 14px; font-style: normal; font-weight: 400; color: black; line-height: normal; margin: 0px; padding: 0px;">
+                                                        No comments yet
+                                                    </p>
+                                                </div>
+                                                <% } %>
+                                                    <div style="position: absolute;
                                                 right: 12px;
                                                 bottom: 148px;
                                                 width: 60px;
                                                 height: 60px;">
-                                            <button onclick="window.location.href='<%= post.song_url %>'"
-                                                style="width: 100%; height: 100%; border: none; background: none; padding: 0; display: flex; justify-content: center; align-items: center; position: relative;">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="61" height="61"
-                                                    viewBox="0 0 61 61" fill="none">
-                                                    <circle cx="30.0828" cy="30.6958" r="29.5" fill="white"
-                                                        stroke="black" />
-                                                </svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-                                                    fill="black" class="bi bi-play-fill" viewBox="0 0 16 16"
-                                                    style="z-index: 1; position: absolute; transform: translateX(1px);">
-                                                    <path
-                                                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
-                                                </svg>
-                                            </button>
-                                        </div>
+                                                        <button onclick="window.location.href='<%= post.song_url %>'"
+                                                            style="width: 100%; height: 100%; border: none; background: none; padding: 0; display: flex; justify-content: center; align-items: center; position: relative;">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="61"
+                                                                height="61" viewBox="0 0 61 61" fill="none">
+                                                                <circle cx="30.0828" cy="30.6958" r="29.5" fill="white"
+                                                                    stroke="black" />
+                                                            </svg>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="28"
+                                                                height="28" fill="black" class="bi bi-play-fill"
+                                                                viewBox="0 0 16 16"
+                                                                style="z-index: 1; position: absolute; transform: translateX(1px);">
+                                                                <path
+                                                                    d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
                                     </div>
                                 </div>
                                 <div

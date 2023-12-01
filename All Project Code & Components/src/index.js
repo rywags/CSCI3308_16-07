@@ -381,7 +381,17 @@ app.post('/create_post', auth, setSessionAccessToken, getTrackInfo, async (req, 
 
 app.get('/discovery/:amount', auth, async (req, res) => {
     const amount = req.params.amount;
-    db.any(`SELECT * FROM posts INNER JOIN users ON users.user_id = posts.user_id ORDER BY post_id DESC LIMIT $1;`, [amount])
+    db.any(`
+        SELECT posts.*, users.*, comments.*, posts.post_id AS post_post_id, comments.post_id AS comment_post_id
+        FROM posts
+        INNER JOIN users ON users.user_id = posts.user_id
+        LEFT JOIN (
+            SELECT *, ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY created_at DESC) as rn
+            FROM comments
+        ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
+        ORDER BY posts.post_id DESC
+        LIMIT $1;
+    `, [amount])
         .then((data) => {
             console.log(data);
             res.render('pages/home', { posts: data });
@@ -457,6 +467,51 @@ app.get('/callback', function (req, res) {
             }
         );
 });
+
+app.get('/post/comments/:post_id', auth, async (req, res) => {
+    const post_id = req.params.post_id;
+
+    try {
+        // First, fetch the post data
+        const postData = await db.one(`
+            SELECT posts.*, users.* 
+            FROM posts 
+            INNER JOIN users ON users.user_id = posts.user_id 
+            WHERE posts.post_id = $1;
+        `, [post_id]);
+
+        // Then, fetch the comments data
+        const commentsData = await db.any(`
+            SELECT * FROM comments 
+            INNER JOIN users ON users.user_id = comments.user_id 
+            WHERE post_id = $1 
+            ORDER BY comment_id DESC;
+        `, [post_id]);
+
+        // Render the comments page with both comments and post data
+        res.render('pages/comments', { 
+            post: postData, 
+            comments: commentsData 
+        });
+    } catch (error) {
+        console.error(error);
+        res.render('pages/comments', {
+            message: "Failed to get post or comments",
+            error: true
+        });
+    }
+});
+
+app.post('/post/comments/:post_id', auth, async (req, res) => {
+    const post_id = req.params.post_id;
+    const comment = req.body.comment;
+    const sql = `INSERT INTO comments (user_id, post_id, comment) VALUES ($1, $2, $3)`;
+    const values = [req.session.user.id, post_id, comment];
+
+    await db.none(sql, values);
+    res.redirect(`/post/comments/${post_id}`);
+});
+
 
 
 

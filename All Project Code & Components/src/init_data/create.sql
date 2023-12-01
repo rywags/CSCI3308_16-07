@@ -33,3 +33,18 @@ CREATE TABLE posts (
         REFERENCES users (user_id) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS comments CASCADE;
+CREATE TABLE comments (
+    comment_id SERIAL PRIMARY KEY,
+    user_id INT,
+    post_id INT,
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user_id
+        FOREIGN KEY(user_id) 
+        REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_post_id
+        FOREIGN KEY(post_id) 
+        REFERENCES posts (post_id) ON DELETE CASCADE
+);
+
