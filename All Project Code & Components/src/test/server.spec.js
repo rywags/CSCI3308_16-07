@@ -16,6 +16,7 @@ describe('Register!', () => {
             .request(server)
             .post('/register')
             .send({
+                displayName: 'test',
                 username: 'test',
                 email: 'test@gmail.com',
                 password1: 'test',

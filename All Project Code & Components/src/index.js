@@ -248,7 +248,7 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    if (!req.body.username || !req.body.email || !req.body.password1 || !req.body.password2) {
+    if (!req.body.username || !req.body.displayName || !req.body.email || !req.body.password1 || !req.body.password2) {
         res.render('pages/register', {
             message: "Missing fields.",
             error: true
@@ -272,8 +272,8 @@ app.post('/register', async (req, res) => {
             return;
         }
         const hash = await bcrypt.hash(req.body.password1, 10);
-        const addUser = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-        const userInfo = [req.body.username.trim(), req.body.email.trim(), hash];
+        const addUser = 'INSERT INTO users (display_name, username, email, password) VALUES ($1, $2, $3, $4)';
+        const userInfo = [req.body.displayName.trim(), req.body.username.trim(), req.body.email.trim(), hash];
         await db.none(addUser, userInfo)
             .then(() => {
                 user = {
@@ -489,9 +489,9 @@ app.get('/post/comments/:post_id', auth, async (req, res) => {
         `, [post_id]);
 
         // Render the comments page with both comments and post data
-        res.render('pages/comments', { 
-            post: postData, 
-            comments: commentsData 
+        res.render('pages/comments', {
+            post: postData,
+            comments: commentsData
         });
     } catch (error) {
         console.error(error);
@@ -507,6 +507,11 @@ app.post('/post/comments/:post_id', auth, async (req, res) => {
     const comment = req.body.comment;
     const sql = `INSERT INTO comments (user_id, post_id, comment) VALUES ($1, $2, $3)`;
     const values = [req.session.user.id, post_id, comment];
+
+    if (comment.trim() === '') {
+        res.redirect(`/post/comments/${post_id}`);
+        return;
+    }
 
     await db.none(sql, values);
     res.redirect(`/post/comments/${post_id}`);
