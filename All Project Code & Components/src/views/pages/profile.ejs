@@ -10,21 +10,32 @@
               <!-- Profile Heading -->
               <div class="col" style="border-color: black; border-width: 1px; border-style: solid; padding:
                 24px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">
-                <div class="d-flex align-items-center">
-                  <img src="<%= user.profile_picture %>" alt="profile picture"
-                    style="width: 80px; height: auto; border-radius: 50%;">
-                  <h1
-                    style="font-size: 40px; font-style: normal; font-weight: 700; line-height: normal; margin: 0px; padding: 0px; padding-left: 20px;">
-                    <%= user.username %>
-                  </h1>
-                  <h2
-                    style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px; padding-left: 40px; padding-top: 8px;">
-                    Followers: <%= user.followers %>
-                  </h2>
-                  <h2
-                    style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px; padding-left: 40px; padding-top: 8px;">
-                    Following: <%= user.following %>
-                  </h2>
+
+                <div class="d-flex">
+                  <div class="col-6 d-flex align-items-center">
+                    <img src="<%= user.profile_picture %>" alt="profile picture"
+                      style="width: 80px; height: auto; border-radius: 50%;">
+                    <div class="d-flex flex-column" style="align-items: flex-start;">
+                      <h1
+                        style="font-size: 40px; font-style: normal; font-weight: 700; line-height: noprmal; margin: 0px; padding: 0px; padding-left: 20px;">
+                        <%= user.display_name %>
+                      </h1>
+                      <h1
+                        style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px; padding-left: 20px;">
+                        @<%= user.username %>
+                      </h1>
+                    </div>
+                  </div>
+                  <div class="col-6 d-flex" style="align-items: flex-start; padding-top: 20px;">
+                    <h2
+                      style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px; padding-left: 40px;">
+                      Followers: <%= user.followers %>
+                    </h2>
+                    <h2
+                      style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px; padding-left: 40px;">
+                      Following: <%= user.following %>
+                    </h2>
+                  </div>
                 </div>
                 <div style="width: 50%">
                   <p
