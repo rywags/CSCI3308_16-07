@@ -19,8 +19,8 @@ describe('Register!', () => {
                 displayName: 'test',
                 username: 'test',
                 email: 'test@gmail.com',
-                password1: 'test',
-                password2: 'test'
+                password1: 'test1234',
+                password2: 'test1234'
             })
             .redirects(0)
             .end((err, res) => {
@@ -37,7 +37,7 @@ describe('Login!', () => {
             .post('/login')
             .send({
                 username: 'test',
-                password: 'test',
+                password: 'test1234',
             })
             .end((err, res) => {
                 res.should.have.status(200); // checks for redirect to home page ('/')
