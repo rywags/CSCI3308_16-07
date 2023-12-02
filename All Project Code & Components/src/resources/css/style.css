@@ -1,28 +1,32 @@
 header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
+  background-color: #333;
+  color: white;
+  padding: 10px;
 }
 
 .navbar {
-    background-color: #444;
+  background-color: #444;
 }
 
 .navbar a {
-    color: white;
-    text-decoration: none;
-    padding: 10px;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
 }
 
 .navbar a:hover {
-    color: #ffd700;
+  color: #ffd700;
 }
 
 .navbar .nav-item a {
-    color: gray;
-    text-decoration: none;
+  color: gray;
+  text-decoration: none;
 }
 
 .navbar .nav-item a:hover {
-    color: #555;
+  color: #555;
+}
+
+.box-shadow {
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);
 }
