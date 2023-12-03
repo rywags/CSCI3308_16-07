@@ -22,7 +22,24 @@
                     <tbody>
                         <% users.forEach(function(user) { %>
                             <tr>
-                                <td><%= user.username %></td>
+                                <td>
+                                    <form action="/profile/<%= user.user_id %>" method="get">
+                                        <button type="submit" style="background: none; border: none; padding: 0; margin: 0;">
+                                            <div class="d-flex align-items-center" style="padding-bottom: 12px;">
+                                                <img src="<%= user.profile_picture %>" width="32px" height="32px"
+                                                    style="border-radius: 50%; margin-right: 10px;">
+                                                <div class="d-flex flex-column" style="align-items: flex-start;">
+                                                    <h2>
+                                                        <%= user.display_name %>
+                                                    </h2>
+                                                    <h2 class="subtitle">
+                                                        @<%= user.username %>
+                                                    </h2>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         <% }); %>
                     </tbody>
