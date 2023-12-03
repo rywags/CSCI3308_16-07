@@ -11,16 +11,14 @@
                             style="position: relative; max-width: 390px; width: 100%; height: fit-content; padding: 0px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-right: 40px;">
                             <div class="col"
                                 style="width: 100%; height: fit-content; border-color: black; border-width: 1px; border-style: solid; padding: 12px;">
-                                <h2
-                                    style="font-size: 20px; font-style: normal; font-weight: 600; line-height: normal; margin: 0px; padding: 0px; padding-bottom: 4px;">
+                                <h2 style="padding-bottom: 4px;">
                                     <%= post.song_name %>
                                 </h2>
-                                <p
-                                    style="font-size: 12px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                <h2 class="subtitle">
                                     <%= post.artist %>
-                                </p>
+                                </h2>
                             </div>
-                            <div class="col"
+                            <div class=" col"
                                 style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; overflow: hidden;">
                                 <img src="<%= post.img_url %>" width="100%"></img>
                             </div>
@@ -30,19 +28,16 @@
                                     <img src="<%= post.profile_picture %>" width="32px" height="32px"
                                         style="border-radius: 50%; margin-right: 10px;">
                                     <div class="d-flex flex-column" style="align-items: flex-start;">
-                                        <h2
-                                            style="font-size: 20px; font-style: normal; font-weight: 600; line-height: 1; margin: 0px; padding: 0px;">
+                                        <h2>
                                             <%= post.display_name %>
                                         </h2>
-                                        <h2
-                                            style="font-size: 12px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                        <h2 class="subtitle">
                                             @<%= post.username %>
                                         </h2>
                                     </div>
                                 </div>
                                 <div>
-                                    <p
-                                        style="font-size: 14px; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                    <p>
                                         <%= post.description %>
                                     </p>
                                 </div>
@@ -76,8 +71,7 @@
                             <div class="col"
                                 style="width: 100%; padding: 12px; padding-bottom: 16px; padding-right: 16px; box-sizing: border-box;">
                                 <div class="d-flex" style="padding-bottom: 12px;">
-                                    <p
-                                        style="font-size: 14px; font-style: normal; font-weight: 600; color: black; line-height: normal; margin: 0px; padding: 0px;">
+                                    <p style="color: black;">
                                         Comments
                                     </p>
                                 </div>
@@ -90,20 +84,18 @@
                                                     style="border-radius: 50%; margin-right: 10px;">
                                                 <div>
                                                     <div class="d-flex align-items-center">
-                                                        <h2
-                                                            style="font-size: 14px; font-weight: 500; line-height: 1.5; margin: 0; padding: 0;">
+                                                        <p style="color: black;">
                                                             <%= comment.username %>
-                                                        </h2>
+                                                        </p>
                                                         <span
-                                                            style="font-size: 12px; font-weight: 400; color: gray; line-height: 1.5; margin-left: 4px; align-self: center; padding-top: 4px;">
+                                                            style="line-height: 1.5; margin-left: 4px; align-self: center; padding-top: 4px;">
                                                             • <%= new Date(comment.created_at).getMonth() + 1 %>-<%= new
                                                                     Date(comment.created_at).getDate() %>-<%= new
                                                                         Date(comment.created_at).getFullYear() %>
                                                         </span>
                                                     </div>
 
-                                                    <p
-                                                        style="font-size: 14px; word-break: break-word; font-style: normal; font-weight: 400; line-height: normal; margin: 0px; padding: 0px;">
+                                                    <p>
                                                         <%= comment.comment %>
                                                     </p>
                                                 </div>
@@ -112,8 +104,7 @@
                                         <% }) %>
                                             <% } else { %>
                                                 <div>
-                                                    <p
-                                                        style="font-size: 14px; font-style: normal; font-weight: 400; color: black; line-height: normal; margin: 0px; padding: 0px;">
+                                                    <p>
                                                         No comments yet
                                                     </p>
                                                 </div>
@@ -142,7 +133,8 @@
                                                 });
                                             });
                                         </script>
-                                        <button type="submit" style="background: none; border: none;">
+                                        <button class="post-button" type="submit"
+                                            style="background: none; border: none;">
                                             Post
                                         </button>
                                     </div>

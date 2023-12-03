@@ -1,32 +1,90 @@
-header {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-}
-
-.navbar {
-  background-color: #444;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  padding: 10px;
-}
-
-.navbar a:hover {
-  color: #ffd700;
-}
-
-.navbar .nav-item a {
-  color: gray;
-  text-decoration: none;
-}
-
-.navbar .nav-item a:hover {
-  color: #555;
-}
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
 
 .box-shadow {
   box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);
+}
+
+body {
+  font-family: "Open sans", sans-serif !important;
+}
+
+h1 {
+  color: #000;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  color: #000;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  color: #666666;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+
+h2.subtitle {
+  color: #666666;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+
+h3 {
+  color: #000;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+
+span {
+  color: #666666;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+textarea {
+  color: #666666;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+}
+
+.post-button {
+  color: #000;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.background-color {
+  background-color: #753434;
 }
