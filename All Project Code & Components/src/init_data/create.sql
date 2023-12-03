@@ -49,3 +49,15 @@ CREATE TABLE comments (
         REFERENCES posts (post_id) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS follows CASCADE;
+CREATE TABLE follows (
+    follow_id SERIAL PRIMARY KEY,
+    follower_id INT,
+    following_id INT,
+    CONSTRAINT fk_follower_id
+        FOREIGN KEY(follower_id) 
+        REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_following_id
+        FOREIGN KEY(following_id) 
+        REFERENCES users (user_id) ON DELETE CASCADE
+);

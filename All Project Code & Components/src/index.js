@@ -328,18 +328,15 @@ app.get('/logout', auth, (req, res) => {
     res.render('pages/login', { message: "Logged out Successfully" });
 });
 
-app.get('/search', (req, res) => {
+app.get('/search', auth, (req, res) => {
     res.render('pages/search');
 });
 
-app.post('/search', (req, res) => {
-    console.log("Here1");
+app.post('/search', auth, (req, res) => {
     const username = '%' + req.body.username + '%';
     const query = `select * from users where username like $1`;
     db.manyOrNone(query, [username])
         .then((data) => {
-            console.log("here");
-            console.log(data);
             res.render('pages/search', { users: data });
         })
         .catch((err) => {
@@ -410,10 +407,42 @@ app.get('/discovery/:amount', auth, async (req, res) => {
 app.get('/profile', auth, async (req, res) => {
     db.one('SELECT * FROM users WHERE username = $1;', req.session.user.username)
         .then(async (data) => {
-            console.log(data);
-            console.log(data.top_songs);
-            console.log(data.top_artists);
-            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists });
+            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true });
+        }).catch((error) => {
+            console.error(error);
+            res.render('pages/profile', {
+                message: "Failed to get profile",
+                error: true
+            });
+        });
+});
+
+app.get('/profile/:user_id', auth, async (req, res) => {
+    const user_id = req.params.user_id;
+    const current_user_id = req.session.user.id;
+    console.log(`${user_id} ${current_user_id}`);
+    if (user_id == current_user_id) {
+        console.log("redirecting to own profile");
+        res.redirect('/profile');
+        return;
+    }
+
+    db.one('SELECT * FROM users WHERE user_id = $1;', user_id)
+        .then(async (data) => {
+            db.oneOrNone('SELECT * FROM follows WHERE follower_id = $1 AND following_id = $2;', [current_user_id, user_id])
+                .then((followData) => {
+                    let isfollowing = false;
+                    if (followData) {
+                        isfollowing = true;
+                    }
+                    res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: false, isfollowing: isfollowing });
+                }).catch((error) => {
+                    console.error(error);
+                    res.render('pages/profile', {
+                        message: "Failed to get follow data",
+                        error: true
+                    });
+                });
         }).catch((error) => {
             console.error(error);
             res.render('pages/profile', {
@@ -520,7 +549,37 @@ app.post('/post/comments/:post_id', auth, async (req, res) => {
     res.redirect(`/post/comments/${post_id}`);
 });
 
+app.post('/user/follow/:user_id', auth, async (req, res) => {
+    const user_id = req.params.user_id;
+    const sql = `INSERT INTO follows (follower_id, following_id) VALUES ($1, $2)`;
+    const values = [req.session.user.id, user_id];
 
+    await db.none(sql, values);
+
+    const updateFollowersSql = `UPDATE users SET followers = followers + 1 WHERE user_id = $1`;
+    await db.none(updateFollowersSql, [user_id]);
+
+    const updateFollowingSql = `UPDATE users SET following = following + 1 WHERE user_id = $1`;
+    await db.none(updateFollowingSql, [req.session.user.id]);
+
+    res.redirect(`/profile/${user_id}`);
+});
+
+app.post('/user/unfollow/:user_id', auth, async (req, res) => {
+    const user_id = req.params.user_id;
+    const sql = `DELETE FROM follows WHERE follower_id = $1 AND following_id = $2`;
+    const values = [req.session.user.id, user_id];
+
+    await db.none(sql, values);
+
+    const updateFollowersSql = `UPDATE users SET followers = followers - 1 WHERE user_id = $1`;
+    await db.none(updateFollowersSql, [user_id]);
+
+    const updateFollowingSql = `UPDATE users SET following = following - 1 WHERE user_id = $1`;
+    await db.none(updateFollowingSql, [req.session.user.id]);
+
+    res.redirect(`/profile/${user_id}`);
+});
 
 
 
