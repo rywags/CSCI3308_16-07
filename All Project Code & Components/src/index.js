@@ -407,11 +407,41 @@ app.get('/discovery/:amount', auth, async (req, res) => {
 app.get('/profile', auth, async (req, res) => {
     db.one('SELECT * FROM users WHERE username = $1;', req.session.user.username)
         .then(async (data) => {
-            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true });
+            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: false });
         }).catch((error) => {
             console.error(error);
-            res.render('pages/profile', {
+            res.render('pages/home', {
                 message: "Failed to get profile",
+                error: true
+            });
+        });
+});
+
+app.get('/profile/edit', auth, async (req, res) => {
+    db.one('SELECT * FROM users WHERE username = $1;', req.session.user.username)
+        .then(async (data) => {
+            res.render('pages/profile', {  user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: true});
+        }).catch((error) => {
+            console.error(error);
+            res.render('pages/home', {
+                message: "Failed to get profile",
+                error: true
+            });
+        });
+});
+
+app.post('/profile/edit', auth, async (req, res) => {
+    const display_name = req.body.displayName;
+    const bio = req.body.bio;
+
+    db.none('UPDATE users SET display_name = $1, bio = $2 WHERE username = $3;', [display_name, bio, req.session.user.username])
+        .then(() => {  
+            res.redirect('/profile');
+        }
+        ).catch((error) => {
+            console.error(error);
+            res.render('pages/home', {
+                message: "Failed to update profile",
                 error: true
             });
         });
@@ -438,14 +468,14 @@ app.get('/profile/:user_id', auth, async (req, res) => {
                     res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: false, isfollowing: isfollowing });
                 }).catch((error) => {
                     console.error(error);
-                    res.render('pages/profile', {
+                    res.render('pages/home', {
                         message: "Failed to get follow data",
                         error: true
                     });
                 });
         }).catch((error) => {
             console.error(error);
-            res.render('pages/profile', {
+            res.render('pages/home', {
                 message: "Failed to get profile",
                 error: true
             });
