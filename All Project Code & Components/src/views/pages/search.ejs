@@ -1,52 +1,57 @@
-<!-- FILEPATH: /Users/owen/Documents/CSCI 3308/CSCI3308_16-07/All Project Code & Components/src/views/pages/search.ejs -->
-        <%- include ('../partials/head') %>
-        <%- include('../partials/menu') %>
+<%- include ('../partials/head') %>
+<%- include('../partials/menu') %>
 
-        <div class="container">
-            <h1>Search Users</h1>
-            <form action="/search" method="POST">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
-                </div>
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
-            
-            <% if (typeof users !== "undefined" && users.length > 0) { %>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% users.forEach(function(user) { %>
-                            <tr>
-                                <td>
-                                    <form action="/profile/<%= user.user_id %>" method="get">
-                                        <button type="submit" style="background: none; border: none; padding: 0; margin: 0;">
-                                            <div class="d-flex align-items-center" style="padding-bottom: 12px;">
-                                                <img src="<%= user.profile_picture %>" width="32px" height="32px"
-                                                    style="border-radius: 50%; margin-right: 10px;">
-                                                <div class="d-flex flex-column" style="align-items: flex-start;">
-                                                    <h2>
-                                                        <%= user.display_name %>
-                                                    </h2>
-                                                    <h2 class="subtitle">
-                                                        @<%= user.username %>
-                                                    </h2>
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-            <% } else { %>
-                <p>No users found.</p>
-            <% } %>
+<div class="container">
+    <h1 style="text-align: center;
+            background-color: whitesmoke;
+            border-color: black;
+            border-width: 1px;
+            border-style: solid;
+            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">Search Users</h1>
+    <form action="/search" method="POST">
+        <div class="form-container">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
         </div>
+        <button type="submit" class="btn btn-primary" style="float: right; width: 100%;">Search</button>
+    </form>
 
-        <%- include('../partials/footer') %>
+    <% if (typeof users !=="undefined" && users.length> 0) { %>
+    <table class="table">
+        <thead>
+        </thead>
+        <tbody>
+            <% users.forEach(function(user) { %>
+            <tr>
+                <td>
+                    <form action="/profile/<%= user.user_id %>" method="get">
+                        <button type="submit" style="background-color: whitesmoke;
+                                            border-color: black;
+                                            border-width: 1px;
+                                            border-style: solid;
+                                            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); width: 100%;">
+                            <div class="d-flex align-items-center" style="padding-bottom: 12px;">
+                                <img src="<%= user.profile_picture %>" width="32px" height="32px"
+                                    style="border-radius: 50%; margin-right: 10px;">
+                                <div class="d-flex flex-column" style="align-items: flex-start;">
+                                    <h2>
+                                        <%= user.display_name %>
+                                    </h2>
+                                    <h2 class="subtitle">
+                                        @<%= user.username %>
+                                    </h2>
+                                </div>
+                            </div>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <% } else { %>
+    <p>No users found.</p>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>

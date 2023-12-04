@@ -235,7 +235,7 @@ const login = async (req, res, next) => {
 
 //TODO: Implement Endpoints
 app.get('/', (req, res) => {
-    res.redirect('/discovery/10');
+    res.redirect('/home/10');
 });
 
 app.get('/login', (req, res) => {
@@ -379,7 +379,7 @@ app.post('/create_post', auth, setSessionAccessToken, getTrackInfo, async (req, 
     }
 });
 
-app.get('/discovery/:amount', auth, async (req, res) => {
+app.get('/home/:amount', auth, async (req, res) => {
     const amount = req.params.amount;
     const current_user_id = req.session.user.id;
 
