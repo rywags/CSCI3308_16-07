@@ -5,7 +5,7 @@ Login
             Username
             Password
         The user must enter the correct username and password to log in. 
-        In order to test the feature, the user will be provided with a username and password and required to input them on the login page
+        To test the feature, the user will be provided with a username and password field and required to input them on the login page
         The user will use our login page and redirect to the homepage if successful
         The user acceptance testers will be asked whether or not the provided login information was successful. 
 
@@ -14,7 +14,7 @@ Login
             Username
             Password
         The user must enter the correct username and incorrect password to their respective fields
-        In order to test the feature, the user will be provided with a username and password and required to input them on the login page
+        To test the feature, the user will be provided with a username and password field and required to input them on the login page
         Because they have been provided with an incorrect password, they will be redirected to the login page and given a message that the password is incorrect
         The user acceptance testers will be asked whether or not they were redirected to the login page. 
 
@@ -22,20 +22,19 @@ Register
     The user should be able to register with valid credentials
         Users must enter mandatory fields to register, mandatory fields include:
             Email
+            Display Name
             Username
             Password
-            Spotify ID
-        The user must enter a unique email, username, password, and Spotify ID to register
+        The user must enter a unique email, display name, username, and a matching password to register
         The user’s information will be stored in the ‘users’ database
-        In order to test the feature, the user will be provided with an email, username, password, and Spotify ID and be asked to enter them on the register page
+        To test the feature, the user will provide an email, display name, username, and a matching password and be asked to enter them on the register page
         The user will be redirected to the home page upon successful registration
 
-Post
-    The user should be able to create a post
-        The user must provide the required fields to create a post, the mandatory fields include the following:
-            Link to Spotify
-            Comment
-        The user can select the post page, be redirected to a page where they can provide the mandatory fields for a post, and post to their home/feed page. 
-        In order to test the feature, the user will be provided with a Spotify link and a test comment. 
-        If successful, the user will be redirected to the feed page with their post as the most recent post. 
-        The user will
+Delete User
+    The user should be able to delete their account
+        The user must be logged in to delete their account. To do that they will enter:
+            username
+            password
+        The user can select the profile page once they are logged in, then they can select the option to delete their account and be redirected to the login page. 
+        To test the feature, the user will log in and then delete their account. 
+        If successful, the user will be redirected to the login page and their account will be removed from the database.
