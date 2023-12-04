@@ -381,6 +381,8 @@ app.post('/create_post', auth, setSessionAccessToken, getTrackInfo, async (req, 
 
 app.get('/discovery/:amount', auth, async (req, res) => {
     const amount = req.params.amount;
+    const current_user_id = req.session.user.id;
+
     db.any(`
         SELECT posts.*, users.*, comments.*, posts.post_id AS post_post_id, comments.post_id AS comment_post_id
         FROM posts
@@ -389,9 +391,14 @@ app.get('/discovery/:amount', auth, async (req, res) => {
             SELECT *, ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY created_at DESC) as rn
             FROM comments
         ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
+        WHERE posts.user_id IN (
+            SELECT following_id FROM follows WHERE follower_id = $1
+            UNION
+            SELECT $1
+        )
         ORDER BY posts.post_id DESC
-        LIMIT $1;
-    `, [amount])
+        LIMIT $2;
+    `, [current_user_id, amount])
         .then((data) => {
             console.log(data);
             res.render('pages/home', { posts: data });
