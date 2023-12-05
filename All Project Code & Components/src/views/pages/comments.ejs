@@ -24,27 +24,39 @@
                             </div>
                             <div class="col"
                                 style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; padding: 12px; padding-bottom: 16px;">
-                                <div class="d-flex align-items-center" style="padding-bottom: 12px;">
-                                    <img src="<%= post.profile_picture %>" width="32px" height="32px"
-                                        style="border-radius: 50%; margin-right: 10px;">
-                                    <div class="d-flex flex-column" style="align-items: flex-start;">
-                                        <h2>
-                                            <%= post.display_name %>
-                                        </h2>
-                                        <h2 class="subtitle">
-                                            @<%= post.username %>
-                                        </h2>
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex align-items-center" style="padding-bottom: 12px;">
+                                        <img src="<%= post.profile_picture %>" width="32px" height="32px"
+                                            style="border-radius: 50%; margin-right: 10px;">
+                                        <div class="d-flex flex-column" style="align-items: flex-start;">
+                                            <h2>
+                                                <%= post.display_name %>
+                                            </h2>
+                                            <h2 class="subtitle">
+                                                @<%= post.username %>
+                                            </h2>
+                                        </div>
+
+                                    </div>
+                                    <div class="like-section">
+                                        <span id="like-count-<%= post.post_post_id %>">
+                                            <%= post.likes %>
+                                        </span>
+                                        <span>
+                                            Likes
+                                        </span>
                                     </div>
                                 </div>
                                 <div>
-                                    <p>
+                                    <p style="word-wrap: break-word;">
                                         <%= post.description %>
                                     </p>
                                 </div>
+
                             </div>
                             <div style="position: absolute;
                                                 right: 12px;
-                                                bottom: 64px;
+                                                top: 390px;
                                                 width: 60px;
                                                 height: 60px;">
                                 <button onclick="window.location.href='<%= post.song_url %>'"
