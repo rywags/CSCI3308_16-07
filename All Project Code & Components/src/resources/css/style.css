@@ -116,12 +116,10 @@ form input[type="submit"]:hover {
 
 .col>.container>.row>.col-12>.container>.col {
   background-color: whitesmoke;
-  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
 .col-6>.col {
   background-color: whitesmoke;
-  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
 h1 {

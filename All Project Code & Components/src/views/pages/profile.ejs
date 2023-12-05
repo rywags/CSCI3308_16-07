@@ -6,18 +6,20 @@
       <div class="container mt-4" style="margin-bottom: 96px;">
         <div class="row">
           <div class="col-12">
-            <div class="container" style="max-width: 900px; width: 100%; height: fit-content; padding: 0px;">
+            <div class="container"
+              style="max-width: 900px !important; width: 100% !important; height: fit-content; padding: 0px;">
               <!-- Profile Heading -->
               <% if (ownProfile==true && edit==true) { %>
-                <form action="/profile/edit" method="post">
+                <form action="/profile/edit" method="post" style="max-width: 900px">
                   <% }%>
-                    <div class="col" style="background-color: whitesmoke; border-color: black; border-width: 1px; border-style: solid; padding:
-                24px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">
+                    <div class="col" style="background-color: whitesmoke; border-color: black; border-width: 3px; border-style: solid; padding:
+                24px;">
                       <div class="d-flex">
                         <div class="col-6 d-flex align-items-center">
                           <img src="<%= user.profile_picture %>" alt="profile picture"
                             style="width: 80px; height: 80px; border-radius: 50%;">
-                          <div class="d-flex flex-column" style="align-items: flex-start;">
+                          <div class="d-flex flex-column" style="align-items: flex-start;"
+                            style="margin: 0; padding: 0;">
                             <% if (ownProfile==true && edit==true) { %>
                               <textarea class="display-name" name="displayName" id="displayName" rows="1"
                                 style="width: 100%; background: none; border: none; resize: none; overflow: hidden; margin-right: 12px; padding-left: 20px;"><%= user.display_name %></textarea>
@@ -52,20 +54,27 @@
                           <% if (ownProfile==false) { %>
                             <% if (isfollowing==false) {%>
                               <form action="/user/follow/<%= user.user_id %>" method="post">
-                                <button type="submit" style="margin-left: 20px;">
-                                  follow
+                                <button type="submit"
+                                  style="margin: 0; margin-left: 20px; background: none; border: 2px solid black;">
+                                  <h2>
+                                    Follow
+                                  </h2>
                                 </button>
                               </form>
                               <% } else { %>
                                 <form action="/user/unfollow/<%= user.user_id %>" method="post">
-                                  <button type="submit" style="margin-left: 20px;">
-                                    unfollow
+                                  <button type="submit"
+                                    style="margin-left: 20px; background: none; border: 2px solid black;">
+                                    <h2>
+                                      Unfollow
+                                    </h2>
                                   </button>
                                 </form>
                                 <% } %>
                                   <% } else if (edit==false) { %>
 
                                     <% } %>
+
                         </div>
                         <div class="col-6 d-flex" style="align-items: flex-start; padding-top: 20px;">
                           <h2 style="padding-left: 40px;">
@@ -100,12 +109,12 @@
               <div class="row" style="margin-top: 32px;">
                 <!-- Top Songs -->
                 <div class="col-6 d-flex flex-column align-items-center" style="background-color: transparent;">
-                  <h1 style="background-color: whitesmoke; border-color: black; border-width: 1px; border-style: solid; padding:
-                  12px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">
+                  <h1 style="background-color: whitesmoke; border-color: black; border-width: 3px; border-style: solid; padding:
+                  12px;">
                     Top Songs</h1>
                   <% topTracks.items.forEach(function(song) { %>
-                    <div class="col" style="width: 90%; border-color: black; border-width: 1px; border-style: solid; padding:
-                    16px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-top: 24px;">
+                    <div class="col" style="width: 90%; border-color: black; border-width: 3px; border-style: solid; padding:
+                    16px; margin-top: 24px;">
                       <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                           <img src="<%= song.album.images[0].url %>" alt="Album cover"
@@ -136,12 +145,12 @@
                 </div>
                 <!-- Top Artists -->
                 <div class="col-6 d-flex flex-column align-items-center" style="background-color: transparent;">
-                  <h1 style="background-color: whitesmoke; border-color: black; border-width: 1px; border-style: solid; padding:
-                  12px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">
+                  <h1 style="background-color: whitesmoke; border-color: black; border-width: 3px; border-style: solid; padding:
+                  12px;">
                     Top Artists</h1>
                   <% topArtists.items.forEach(function(artist) { %>
-                    <div class="col" style="width: 90%; border-color: black; border-width: 1px; border-style: solid; padding:
-                      16px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-top: 24px;">
+                    <div class="col" style="width: 90%; border-color: black; border-width: 3px; border-style: solid; padding:
+                      16px; margin-top: 24px;">
                       <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                           <img src="<%= artist.images[0].url %>" alt="Album cover" style="width: 80px; height: auto;">
