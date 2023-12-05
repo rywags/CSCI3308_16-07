@@ -384,13 +384,15 @@ app.get('/home/:amount', auth, async (req, res) => {
     const current_user_id = req.session.user.id;
 
     db.any(`
-        SELECT posts.*, users.*, comments.*, posts.post_id AS post_post_id, comments.post_id AS comment_post_id
+        SELECT posts.*, users.*, comments.*, posts.post_id AS post_post_id, comments.post_id AS comment_post_id,
+        CASE WHEN likes.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_liked
         FROM posts
         INNER JOIN users ON users.user_id = posts.user_id
         LEFT JOIN (
             SELECT *, ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY created_at DESC) as rn
             FROM comments
         ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
+        LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
         WHERE posts.user_id IN (
             SELECT following_id FROM follows WHERE follower_id = $1
             UNION
@@ -427,7 +429,7 @@ app.get('/profile', auth, async (req, res) => {
 app.get('/profile/edit', auth, async (req, res) => {
     db.one('SELECT * FROM users WHERE username = $1;', req.session.user.username)
         .then(async (data) => {
-            res.render('pages/profile', {  user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: true});
+            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: true });
         }).catch((error) => {
             console.error(error);
             res.render('pages/home', {
@@ -442,7 +444,7 @@ app.post('/profile/edit', auth, async (req, res) => {
     const bio = req.body.bio;
 
     db.none('UPDATE users SET display_name = $1, bio = $2 WHERE username = $3;', [display_name, bio, req.session.user.username])
-        .then(() => {  
+        .then(() => {
             res.redirect('/profile');
         }
         ).catch((error) => {
@@ -616,6 +618,56 @@ app.post('/user/unfollow/:user_id', auth, async (req, res) => {
     await db.none(updateFollowingSql, [req.session.user.id]);
 
     res.redirect(`/profile/${user_id}`);
+});
+
+//should not redirect - should just update the likes
+app.post('/post/like/:post_id', auth, async (req, res) => {
+    const post_id = req.params.post_id;
+    const user_id = req.session.user.id;
+    const checkSql = `SELECT * FROM likes WHERE user_id = $1 AND post_id = $2`;
+    const insertSql = `INSERT INTO likes (user_id, post_id) VALUES ($1, $2)`;
+    const updateLikesSql = `UPDATE posts SET likes = likes + 1 WHERE post_id = $1`;
+
+    try {
+        const existingLike = await db.oneOrNone(checkSql, [user_id, post_id]);
+
+        if (existingLike) {
+            return res.status(400).send("Post already liked");
+        }
+
+        await db.none(insertSql, [user_id, post_id]);
+        await db.none(updateLikesSql, [post_id]);
+
+        res.status(200).send("Liked post");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to like post");
+    }
+});
+
+//should not redirect - should just update the likes
+app.post('/post/unlike/:post_id', auth, async (req, res) => {
+    const post_id = req.params.post_id;
+    const user_id = req.session.user.id;
+    const checkSql = `SELECT * FROM likes WHERE user_id = $1 AND post_id = $2`;
+    const deleteSql = `DELETE FROM likes WHERE user_id = $1 AND post_id = $2`;
+    const updateLikesSql = `UPDATE posts SET likes = likes - 1 WHERE post_id = $1`;
+
+    try {
+        const existingLike = await db.oneOrNone(checkSql, [user_id, post_id]);
+
+        if (!existingLike) {
+            return res.status(400).send("Post not liked yet");
+        }
+
+        await db.none(deleteSql, [user_id, post_id]);
+        await db.none(updateLikesSql, [post_id]);
+
+        res.status(200).send("Unliked post");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to unlike post");
+    }
 });
 
 
