@@ -1,57 +1,64 @@
 <%- include ('../partials/head') %>
-<%- include('../partials/menu') %>
+    <%- include('../partials/menu') %>
 
-<div class="container">
-    <h1 style="text-align: center;
-            background-color: whitesmoke;
-            border-color: black;
-            border-width: 1px;
-            border-style: solid;
-            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">Search Users</h1>
-    <form action="/search" method="POST">
-        <div class="form-container">
-            <label for="username">Username:</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" autocomplete="off">
-        </div>
-        <button type="submit" class="btn btn-primary" style="float: right; width: 100%;">Search</button>
-    </form>
-
-    <% if (typeof users !=="undefined" && users.length> 0) { %>
-    <table class="table">
-        <thead>
-        </thead>
-        <tbody>
-            <% users.forEach(function(user) { %>
-            <tr>
-                <td>
-                    <form action="/profile/<%= user.user_id %>" method="get">
-                        <button type="submit" style="background-color: whitesmoke;
-                                            border-color: black;
-                                            border-width: 1px;
-                                            border-style: solid;
-                                            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); width: 100%;">
-                            <div class="d-flex align-items-center" style="padding-bottom: 12px;">
-                                <img src="<%= user.profile_picture %>" width="32px" height="32px"
-                                    style="border-radius: 50%; margin-right: 10px;">
-                                <div class="d-flex flex-column" style="align-items: flex-start;">
-                                    <h2>
-                                        <%= user.display_name %>
-                                    </h2>
-                                    <h2 class="subtitle">
-                                        @<%= user.username %>
-                                    </h2>
-                                </div>
-                            </div>
-                        </button>
+        <div class="container mt-4" style="margin-bottom: 96px;">
+            <div class="col-12">
+                <div class="container box-shadow"
+                    style="border: 1px solid black; max-width: 500px; width: 100%; padding: 24px;">
+                    <h1 style="text-align: center;">Search Users</h1>
+                    <form action="/search" method="POST" style="margin: 0; max-width: none;">
+                        <div class="d-flex flex-column">
+                            <label for="username">Username:</label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                placeholder="Enter username" autocomplete="off">
+                            <button type="submit" class="btn btn-primary"
+                                style="float: right; width: 100%;">Search</button>
+                        </div>
                     </form>
-                </td>
-            </tr>
-            <% }); %>
-        </tbody>
-    </table>
-    <% } else { %>
-    <p>No users found.</p>
-    <% } %>
-</div>
+                </div>
+            </div>
 
-<%- include('../partials/footer') %>
+            <div class="col-12">
+                <div class="container box-shadow"
+                    style="border: 1px solid black; max-width: 500px; width: 100%; padding: 24px;">
+                    <% if (typeof users !=="undefined" && users.length> 0) { %>
+                        <table class="table" style="margin: 0;">
+                            <thead>
+                            </thead>
+                            <tbody>
+                                <% users.forEach(function(user) { %>
+                                    <tr style="padding: 0; margin: 0;">
+                                        <td>
+                                            <form action="/profile/<%= user.user_id %>" method="get" style="margin: 0;">
+                                                <button type="submit"
+                                                    style="border: none; background-color: whitesmoke;">
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="<%= user.profile_picture %>" width="32px"
+                                                            height="32px"
+                                                            style="border-radius: 50%; margin-right: 10px;">
+                                                        <div class="d-flex flex-column"
+                                                            style="align-items: flex-start;">
+                                                            <h2>
+                                                                <%= user.display_name %>
+                                                            </h2>
+                                                            <h2 class="subtitle">
+                                                                @<%= user.username %>
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+
+                        <% } else { %>
+                            <p>No users found.</p>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
