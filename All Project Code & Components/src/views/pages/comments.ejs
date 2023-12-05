@@ -95,7 +95,7 @@
                                                         </span>
                                                     </div>
 
-                                                    <p>
+                                                    <p style="word-break: break-all; word-wrap: break-word;">
                                                         <%= comment.comment %>
                                                     </p>
                                                 </div>
@@ -115,13 +115,13 @@
                             style="background-color: whitesmoke; max-width: 390px; width: 100%; height: fit-content; padding: 0px; margin-top: 24px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-left: 40px;">
                             <div class="col"
                                 style="width: 100%; border-color: black; border-width: 1px; border-style: solid; padding: 12px;">
-                                <form action="" method="post">
+                                <form action="" method="post" style="margin: 0;">
                                     <div class="d-flex justify-content-between"
                                         style="padding-bottom: 12px; align-items: flex-start;">
 
                                         <textarea name="comment"
                                             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-                                            style="width: 100%; background: none; border: none; resize: none; overflow: hidden; margin-right: 12px;"
+                                            style="width: 100%; background: none; border: none; resize: none; overflow: hidden; margin-right: 12px; outline: none"
                                             placeholder="Add a comment..." autocomplete="off" required></textarea>
 
                                         <script>
