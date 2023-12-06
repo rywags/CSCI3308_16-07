@@ -1,7 +1,8 @@
 # CSCI3308_16-07
 CSCI 3308 Group Project
 
-Brief Application description
+## Brief Application description
+The application is a social media website for sharing music. It is called SoundSphere. It is like Instagram and Spotify had a baby.
 
 ### Contributors
 - Eric Fithian: Eric-Fithian
@@ -60,6 +61,7 @@ Brief Application description
 - The website should be running at http://localhost:3000/
 
 ## How to run the tests
-- simply `docker compose up`
+- simply `docker compose up` and the tests will run automatically
 
 ## Link to the deployed application
+- Not currently deployed
