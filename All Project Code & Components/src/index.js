@@ -288,16 +288,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.delete('/delete/:username', (req, res) => {
-    db.none('DELETE FROM users WHERE username = $1;', req.params.username)
-        .then(() => {
-            res.json({ message: "User deleted successfully" });
-        }).catch((error) => {
-            console.error(error);
-            res.json({ message: "User deletion failed" });
-        });
-});
-
 const auth = (req, res, next) => {
     if (req.session.user) {
         next();
@@ -674,10 +664,8 @@ app.post('/post/delete/:post_id', auth, async (req, res) => {
 app.post('/profile/delete', auth, async (req, res) => {
     const user_id = req.session.user.id;
     const sql = `DELETE FROM users WHERE user_id = $1`;
-    console.log("deleting user1")
 
     try {
-        console.log("deleting user2");
         await db.none(sql, [user_id]);
         user.username = undefined;
         user.id = undefined;
@@ -687,7 +675,7 @@ app.post('/profile/delete', auth, async (req, res) => {
         spotifyApi.resetAccessToken();
         spotifyApi.resetRefreshToken();
         req.session.destroy();
-        res.render('pages/login', { message: "Account Deleted Successfully" });
+        res.render('pages/login', { message: "Account Successfully Deleted" });
     } catch (error) {
         console.error(error);
         res.redirect('/profile');

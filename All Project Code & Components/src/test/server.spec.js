@@ -9,6 +9,8 @@ chai.should();
 chai.use(chaiHttp);
 const { assert, expect } = chai;
 
+let cookie;
+
 describe('Register!', () => {
     // Sample test case given to test / endpoint.
     it("Register test user", done => {
@@ -41,6 +43,7 @@ describe('Login!', () => {
             })
             .end((err, res) => {
                 res.should.have.status(200); // checks for redirect to home page ('/')
+                cookie = res.headers['set-cookie'];
                 done();
             });
     });
@@ -61,14 +64,12 @@ describe('Login!', () => {
 
 });
 describe('Delete User!', () => {
-
-    it('should delete a user and return a success message', (done) => {
+    it('should delete a user', (done) => {
         chai.request(server)
-            .delete('/delete/test')
+            .post('/profile/delete')
+            .set('Cookie', cookie) // Set the session cookie
             .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('message').eql('User deleted successfully');
+                res.text.should.include("Account Successfully Deleted");
                 done();
             });
     });
