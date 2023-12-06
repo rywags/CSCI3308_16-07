@@ -93,6 +93,12 @@
                             style="background: none; border-radius: 5px; padding: 4px; margin: 0; margin-top: 12px;">
                             Save
                           </button>
+                          <form action="/profile/delete" method="delete">
+                            <button type="submit"  
+                                style="background: red; color: white; border-radius: 5px; padding: 4px; margin: 0; margin-top: 12px; bottom: 0; right: 0;">
+                              Delete Account
+                            </button>
+
                           <% } else { %>
                             <p style="color: black; padding-top: 8px;">
                               <%= user.bio %>
