@@ -670,6 +670,40 @@ app.post('/post/unlike/:post_id', auth, async (req, res) => {
     }
 });
 
+app.delete('/post/delete/:post_id', auth, async (req, res) => {
+    const post_id = req.params.post_id;
+    const user_id = req.session.user.id;
+    const sql = `DELETE FROM posts WHERE post_id = $1 AND user_id = $2`;
+
+    try {
+        await db.none(sql, [post_id, user_id]);
+        res.status(200).send("Deleted post");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to delete post");
+    }
+});
+
+app.delete('/profile/delete', auth, async (req, res) => {
+    const user_id = req.session.user.id;
+    const sql = `DELETE FROM users WHERE user_id = $1`;
+
+    try {
+        await db.none(sql, [user_id]);
+        req.session.destroy((err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send("Failed to destroy session");
+            } else {
+                res.redirect('/login');
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to delete profile");
+    }
+});
+
 
 
 
