@@ -69,7 +69,6 @@ const state = "some-state-of-my-choice";
 // Middleware functions
 
 const getTrackInfo = async (req, res, next) => {
-    console.log("getting TrackInfo")
     try {
         const trackURL = req.body.songUrl;
         spotifyApi.setAccessToken(req.session.user.spotify_access_token);
@@ -123,7 +122,6 @@ const setSessionAccessToken = async (req, res, next) => {
 
 
 const updateFromSpotifyProfile = async (req, res, next) => {
-    console.log("updating profile");
     let profile_picture = "https://surgassociates.com/wp-content/uploads/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.jpg";
     if (res.locals.spotify_user_info.images.length !== 0) {
         profile_picture = res.locals.spotify_user_info.images[0].url;
@@ -132,7 +130,6 @@ const updateFromSpotifyProfile = async (req, res, next) => {
     const artists = res.locals.artists;
     db.none('UPDATE users SET top_songs = $1, top_artists = $2, profile_picture = $3 WHERE username = $4;', [tracks, artists, profile_picture, req.session.user.username])
         .then(() => {
-            console.log('Profile updated successfully');
             next();
         }).catch((error) => {
             console.error(error);
@@ -144,11 +141,9 @@ const updateFromSpotifyProfile = async (req, res, next) => {
 };
 
 const getSpotifyInfo = async (req, res, next) => {
-    console.log("getting profile info from spotify");
     try {
         spotifyApi.setAccessToken(req.session.user.spotify_access_token);
         const data = await spotifyApi.getMe();
-        console.log(data.body);
         res.locals.spotify_user_info = data.body;
         next();
     } catch (error) {
@@ -161,7 +156,6 @@ const getSpotifyInfo = async (req, res, next) => {
 };
 
 const getTopTracks = async (req, res, next) => {
-    console.log("getting top tracks");
     try {
         spotifyApi.setAccessToken(req.session.user.spotify_access_token);
 
@@ -170,7 +164,6 @@ const getTopTracks = async (req, res, next) => {
         }
 
         const data = await spotifyApi.getMyTopTracks(options);
-        console.log(data.body);
         res.locals.tracks = data.body;
         next();
     } catch (error) {
@@ -183,7 +176,6 @@ const getTopTracks = async (req, res, next) => {
 };
 
 const getTopArtists = async (req, res, next) => {
-    console.log("getting top artists");
     try {
         spotifyApi.setAccessToken(req.session.user.spotify_access_token);
 
@@ -192,7 +184,6 @@ const getTopArtists = async (req, res, next) => {
         }
 
         const data = await spotifyApi.getMyTopArtists(options);
-        console.log(data.body);
         res.locals.artists = data.body;
         next();
     } catch (error) {
@@ -205,7 +196,6 @@ const getTopArtists = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-    console.log("logging in");
     await db.one('SELECT * FROM users WHERE username = $1;', req.body.username)
         .then(async (data) => {
             const match = await bcrypt.compare(req.body.password, data.password);
@@ -402,7 +392,6 @@ app.get('/home/:amount', auth, async (req, res) => {
         LIMIT $2;
     `, [current_user_id, amount])
         .then((data) => {
-            console.log(data);
             res.render('pages/home', { posts: data });
         }).catch((error) => {
             res.render('pages/home', {
@@ -459,9 +448,7 @@ app.post('/profile/edit', auth, async (req, res) => {
 app.get('/profile/:user_id', auth, async (req, res) => {
     const user_id = req.params.user_id;
     const current_user_id = req.session.user.id;
-    console.log(`${user_id} ${current_user_id}`);
     if (user_id == current_user_id) {
-        console.log("redirecting to own profile");
         res.redirect('/profile');
         return;
     }
@@ -670,37 +657,40 @@ app.post('/post/unlike/:post_id', auth, async (req, res) => {
     }
 });
 
-app.delete('/post/delete/:post_id', auth, async (req, res) => {
+app.post('/post/delete/:post_id', auth, async (req, res) => {
     const post_id = req.params.post_id;
     const user_id = req.session.user.id;
     const sql = `DELETE FROM posts WHERE post_id = $1 AND user_id = $2`;
 
     try {
         await db.none(sql, [post_id, user_id]);
-        res.status(200).send("Deleted post");
+        res.redirect('/profile');
     } catch (error) {
-        console.error(error);
+        console.log(error);
         res.status(500).send("Failed to delete post");
     }
 });
 
-app.delete('/profile/delete', auth, async (req, res) => {
+app.post('/profile/delete', auth, async (req, res) => {
     const user_id = req.session.user.id;
     const sql = `DELETE FROM users WHERE user_id = $1`;
+    console.log("deleting user1")
 
     try {
+        console.log("deleting user2");
         await db.none(sql, [user_id]);
-        req.session.destroy((err) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send("Failed to destroy session");
-            } else {
-                res.redirect('/login');
-            }
-        });
+        user.username = undefined;
+        user.id = undefined;
+        user.spotify_access_token = undefined;
+        user.spotify_refresh_token = undefined;
+        user.tokenExpirationTime = undefined;
+        spotifyApi.resetAccessToken();
+        spotifyApi.resetRefreshToken();
+        req.session.destroy();
+        res.render('pages/login', { message: "Account Deleted Successfully" });
     } catch (error) {
         console.error(error);
-        res.status(500).send("Failed to delete profile");
+        res.redirect('/profile');
     }
 });
 
