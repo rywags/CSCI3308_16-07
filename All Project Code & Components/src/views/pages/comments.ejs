@@ -8,7 +8,7 @@
                     <!-- post container -->
                     <div class="col-6">
                         <div class="container"
-                            style="position: relative; max-width: 390px; width: 100%; height: fit-content; padding: 0px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-right: 40px;">
+                            style="background-color: whitesmoke; position: relative; max-width: 390px; width: 100%; height: fit-content; padding: 0px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-right: 40px;">
                             <div class="col"
                                 style="width: 100%; height: fit-content; border-color: black; border-width: 1px; border-style: solid; padding: 12px;">
                                 <h2 style="padding-bottom: 4px;">
@@ -24,27 +24,39 @@
                             </div>
                             <div class="col"
                                 style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; padding: 12px; padding-bottom: 16px;">
-                                <div class="d-flex align-items-center" style="padding-bottom: 12px;">
-                                    <img src="<%= post.profile_picture %>" width="32px" height="32px"
-                                        style="border-radius: 50%; margin-right: 10px;">
-                                    <div class="d-flex flex-column" style="align-items: flex-start;">
-                                        <h2>
-                                            <%= post.display_name %>
-                                        </h2>
-                                        <h2 class="subtitle">
-                                            @<%= post.username %>
-                                        </h2>
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex align-items-center" style="padding-bottom: 12px;">
+                                        <img src="<%= post.profile_picture %>" width="32px" height="32px"
+                                            style="border-radius: 50%; margin-right: 10px;">
+                                        <div class="d-flex flex-column" style="align-items: flex-start;">
+                                            <h2>
+                                                <%= post.display_name %>
+                                            </h2>
+                                            <h2 class="subtitle">
+                                                @<%= post.username %>
+                                            </h2>
+                                        </div>
+
+                                    </div>
+                                    <div class="like-section">
+                                        <span id="like-count-<%= post.post_post_id %>">
+                                            <%= post.likes %>
+                                        </span>
+                                        <span>
+                                            Likes
+                                        </span>
                                     </div>
                                 </div>
                                 <div>
-                                    <p>
+                                    <p style="word-wrap: break-word;">
                                         <%= post.description %>
                                     </p>
                                 </div>
+
                             </div>
                             <div style="position: absolute;
                                                 right: 12px;
-                                                bottom: 64px;
+                                                top: 390px;
                                                 width: 60px;
                                                 height: 60px;">
                                 <button onclick="window.location.href='<%= post.song_url %>'"
@@ -67,7 +79,7 @@
                     <!-- comment container -->
                     <div class="col-6">
                         <div class="container"
-                            style="max-width: 390px; width: 100%; max-height: 500px; height: fit-content; overflow-y: auto; padding: 0px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); box-sizing: border-box; border: 1px solid black; margin-left: 40px;">
+                            style="background-color: whitesmoke; max-width: 390px; width: 100%; max-height: 500px; height: fit-content; overflow-y: auto; padding: 0px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); box-sizing: border-box; border: 1px solid black; margin-left: 40px;">
                             <div class="col"
                                 style="width: 100%; padding: 12px; padding-bottom: 16px; padding-right: 16px; box-sizing: border-box;">
                                 <div class="d-flex" style="padding-bottom: 12px;">
@@ -95,7 +107,7 @@
                                                         </span>
                                                     </div>
 
-                                                    <p>
+                                                    <p style="word-break: break-all; word-wrap: break-word;">
                                                         <%= comment.comment %>
                                                     </p>
                                                 </div>
@@ -111,18 +123,18 @@
                                                 <% } %>
                             </div>
                         </div>
-                        <div class="container"
-                            style="max-width: 390px; width: 100%; height: fit-content; padding: 0px; margin-top: 24px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-left: 40px;">
+                        <div class="form-container"
+                            style="background-color: whitesmoke; max-width: 390px; width: 100%; height: fit-content; padding: 0px; margin-top: 24px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-left: 40px;">
                             <div class="col"
                                 style="width: 100%; border-color: black; border-width: 1px; border-style: solid; padding: 12px;">
-                                <form action="" method="post">
+                                <form action="" method="post" style="margin: 0;">
                                     <div class="d-flex justify-content-between"
                                         style="padding-bottom: 12px; align-items: flex-start;">
 
                                         <textarea name="comment"
                                             oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-                                            style="width: 100%; background: none; border: none; resize: none; overflow: hidden; margin-right: 12px;"
-                                            placeholder="Add a comment..."></textarea>
+                                            style="width: 100%; background: none; border: none; resize: none; overflow: hidden; margin-right: 12px; outline: none"
+                                            placeholder="Add a comment..." autocomplete="off" required></textarea>
 
                                         <script>
                                             // Auto resize textarea on page load

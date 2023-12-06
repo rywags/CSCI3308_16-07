@@ -6,99 +6,127 @@
       <div class="container mt-4" style="margin-bottom: 96px;">
         <div class="row">
           <div class="col-12">
-            <div class="container" style="max-width: 900px; width: 100%; height: fit-content; padding: 0px;">
-              <!-- Profile Heading -->
-              <% if (ownProfile == true && edit == true) { %>
-              <form action="/profile/edit" method="post">
-              <% }%>
-                <div class="col" style="border-color: black; border-width: 1px; border-style: solid; padding:
-                24px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0);">
-
-                  <div class="d-flex">
-                    <div class="col-6 d-flex align-items-center">
-                      <img src="<%= user.profile_picture %>" alt="profile picture"
-                        style="width: 80px; height: auto; border-radius: 50%;">
-                      <div class="d-flex flex-column" style="align-items: flex-start;">
-                        <% if (ownProfile == true && edit == true) { %>
-                            <textarea class="display-name" name="displayName" id="displayName" rows="1"
-                            style="width: 100%; background: none; border: none; resize: none; overflow: hidden; margin-right: 12px; padding-left: 20px;"><%= user.display_name %></textarea>
-                              
-                          <% } else { %>
-                            <div class="d-flex align-items-center">
-                              <h1 style="padding-left: 20px; max-width: 300px; overflow: hidden;">
-                                <%= user.display_name %>
-                              </h1>
-                              <% if (ownProfile == true && edit == false) { %>
-                              <form action="/profile/edit" method="get">
-                                <button style="background: none; border: none; margin: 0; padding: 0; margin-left: 20px;" type="submit">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                  </svg>
-                                </button>
-                              </form>
-                              <% } %>
-                            </div>
-
-                          <% } %>
-                        <h2 style="padding-left: 20px;">
-                          @<%= user.username %>
-                            </h1>
-                      </div>
-                      <% if (ownProfile == false) { %>
-                        <% if (isfollowing == false) {%>
-                          <form action="/user/follow/<%= user.user_id %>" method="post">
-                              <button type="submit" style="margin-left: 20px;">
-                                  follow
-                              </button>
-                          </form>
-                          <% } else { %>
-                          <form action="/user/unfollow/<%= user.user_id %>" method="post">
-                              <button type="submit" style="margin-left: 20px;">
-                                  unfollow
-                              </button>
-                          </form>
-                          <% } %>
-                        <% } else if (edit == false) { %>
-                        
-                        <% } %>
-                    </div>
-                    <div class="col-6 d-flex" style="align-items: flex-start; padding-top: 20px;">
-                      <h2 style="padding-left: 40px;">
-                        Followers: <%= user.followers %>
-                      </h2>
-                      <h2 style="padding-left: 40px;">
-                        Following: <%= user.following %>
-                      </h2>
-                    </div>
-                  </div>
-                  <div style="width: 50%">
-                    <% if (ownProfile == true && edit == true) { %>
-                    <textarea class="bio" name="bio" id="bio"
-                            style="width: 100%; background: none; border: none; resize: none; overflow: hidden; padding: 4px; margin-right: 12px; margin-top: 4px;"><%= user.bio %></textarea>
-                    <button type="submit" style="background: none; border-radius: 5px; padding: 4px; margin: 0; margin-top: 12px;">
-                        Save
+            <div class="container"
+              style="max-width: 900px !important; width: 100% !important; height: fit-content; padding: 0px;">
+              <% if (ownProfile==true && edit==true) { %>
+                <div class="d-flex flex-column align-items-center">
+                  <form action="/profile/delete" method="post" style="margin: 0;">
+                    <button type="submit"
+                      style="background: red; color: white; border-radius: 5px; padding: 4px; margin: 0;">
+                      Delete Account
                     </button>
-                    <% } else { %>
-                    <p style="color: black; padding-top: 8px;">
-                      <%= user.bio %>
-                    </p>
-                    <% } %>
-                  </div>
+                  </form>
                 </div>
-              <% if (ownProfile == true && edit == true) { %>
-              </form>
-              <% }%>
-              
+                <% }%>
+                  <!-- Profile Heading -->
+                  <% if (ownProfile==true && edit==true) { %>
+                    <form action="/profile/edit" method="post" style="max-width: 900px">
+                      <% }%>
+                        <div class="col" style="background-color: whitesmoke; border-color: black; border-width: 2px; border-style: solid; padding:
+                24px;">
+                          <div class="d-flex">
+                            <div class="col-6 d-flex align-items-center">
+                              <img src="<%= user.profile_picture %>" alt="profile picture"
+                                style="width: 80px; height: 80px; border-radius: 50%;">
+                              <div class="d-flex flex-column" style="align-items: flex-start;"
+                                style="margin: 0; padding: 0;">
+                                <% if (ownProfile==true && edit==true) { %>
+                                  <textarea class="display-name" name="displayName" id="displayName" rows="1"
+                                    style="width: 100%; background: none; border: none; resize: none; overflow: hidden; margin-right: 12px; padding-left: 20px;"><%= user.display_name %></textarea>
+
+                                  <% } else { %>
+                                    <div class="d-flex align-items-center">
+                                      <h1 style="padding-left: 20px; max-width: 300px; overflow: hidden;">
+                                        <%= user.display_name %>
+                                      </h1>
+                                      <% if (ownProfile==true && edit==false) { %>
+                                        <form action="/profile/edit" method="get" style="padding: 0; margin: 0;">
+                                          <button
+                                            style="background: none; border: none; margin: 0; padding: 0; margin-left: 20px;"
+                                            type="submit">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                              fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                              <path
+                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                              <path fill-rule="evenodd"
+                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                            </svg>
+                                          </button>
+                                        </form>
+                                        <% } %>
+                                    </div>
+
+                                    <% } %>
+                                      <h2 style="padding-left: 20px;">
+                                        @<%= user.username %>
+                                          </h1>
+                              </div>
+                              <% if (ownProfile==false) { %>
+                                <% if (isfollowing==false) {%>
+                                  <form action="/user/follow/<%= user.user_id %>" method="post">
+                                    <button type="submit"
+                                      style="margin: 0; margin-left: 20px; background: none; border: 2px solid black;">
+                                      <h2>
+                                        Follow
+                                      </h2>
+                                    </button>
+                                  </form>
+                                  <% } else { %>
+                                    <form action="/user/unfollow/<%= user.user_id %>" method="post">
+                                      <button type="submit"
+                                        style="margin-left: 20px; background: none; border: 2px solid black;">
+                                        <h2>
+                                          Unfollow
+                                        </h2>
+                                      </button>
+                                    </form>
+                                    <% } %>
+                                      <% } else if (edit==false) { %>
+
+                                        <% } %>
+
+                            </div>
+                            <div class="col-6 d-flex" style="align-items: flex-start; padding-top: 20px;">
+                              <h2 style="padding-left: 40px;">
+                                Followers: <%= user.followers %>
+                              </h2>
+                              <h2 style="padding-left: 40px;">
+                                Following: <%= user.following %>
+                              </h2>
+                            </div>
+                          </div>
+                          <div style="width: 50%">
+                            <% if (ownProfile==true && edit==true) { %>
+                              <textarea class="bio" name="bio" id="bio"
+                                style="width: 100%; background: none; border: none; resize: none; overflow: hidden; padding: 4px; margin-right: 12px; margin-top: 4px;"><%= user.bio %></textarea>
+                              <button type="submit"
+                                style="background: none; border-radius: 5px; padding: 4px; margin: 0; margin-top: 12px;">
+                                Save
+                              </button>
+                              <% } else { %>
+                                <p style="color: black; padding-top: 8px;">
+                                  <%= user.bio %>
+                                </p>
+                                <% } %>
+                          </div>
+                        </div>
+                        <% if (ownProfile==true && edit==true) { %>
+                    </form>
+
+                    <% }%>
+
+            </div>
+            <div class="container" style="max-width: 900px; width: 100%; height: fit-content; padding: 0px;">
               <!-- Profile Info -->
               <div class="row" style="margin-top: 32px;">
                 <!-- Top Songs -->
-                <div class="col-6 d-flex flex-column align-items-center">
-                  <h1>
+                <div class="col-6 d-flex flex-column align-items-center" style="background-color: transparent;">
+                  <h1 style="background-color: whitesmoke; border-color: black; border-width: 2px; border-style: solid; padding:
+                  12px;">
                     Top Songs</h1>
                   <% topTracks.items.forEach(function(song) { %>
-                    <div class="col" style="width: 90%; border-color: black; border-width: 1px; border-style: solid; padding:
-                    16px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-top: 24px;">
+                    <div class="col" style="width: 90%; border-color: black; border-width: 2px; border-style: solid; padding:
+                    16px; margin-top: 24px;">
                       <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                           <img src="<%= song.album.images[0].url %>" alt="Album cover"
@@ -128,12 +156,13 @@
                     <% }); %>
                 </div>
                 <!-- Top Artists -->
-                <div class="col-6 d-flex flex-column align-items-center">
-                  <h1>
+                <div class="col-6 d-flex flex-column align-items-center" style="background-color: transparent;">
+                  <h1 style="background-color: whitesmoke; border-color: black; border-width: 2px; border-style: solid; padding:
+                  12px;">
                     Top Artists</h1>
                   <% topArtists.items.forEach(function(artist) { %>
-                    <div class="col" style="width: 90%; border-color: black; border-width: 1px; border-style: solid; padding:
-                      16px; box-shadow: 6px 6px 0px 0px rgba(0, 0, 0); margin-top: 24px;">
+                    <div class="col" style="width: 90%; border-color: black; border-width: 2px; border-style: solid; padding:
+                      16px; margin-top: 24px;">
                       <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                           <img src="<%= artist.images[0].url %>" alt="Album cover" style="width: 80px; height: auto;">
@@ -148,7 +177,8 @@
                         </div>
                         <div class="d-flex align-items-center" style="width: 60px; height: 60px;">
                           <button onclick="window.location.href=' <%=artist.external_urls.spotify %>'"
-                                style="width: 40px; height: 40px; padding: 0; display: flex; justify-content: center;
+                                style="width: 40px; height: 40px; padding: 0; display: flex; justify-content:
+                                center;
                                 align-items: center; border: none; background: none;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black"
                                   class="bi bi-arrow-up-right" viewBox="0 0 16 16">

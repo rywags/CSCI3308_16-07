@@ -3,29 +3,26 @@
 
     <main>
       <div class="col"><%- include ('../partials/message') %></div>
-      <div class="container">
-
-
-        <!-- THE REST OF YOUR HTML CODE GOES HERE -->
-        <h2>
-          <center>Create a New Post (all fields are required!)</center>
+      <div class="form-container">
+        <h2 style="text-align: center;">
+          Create a New Post
         </h2>
-        <form action="/create_post" method="POST"
-          style="display: block; width: 50%; margin: 0 auto; padding-top: 10px;">
+        <form action="/create_post" method="POST" style="display: block; padding-top: 10px; width: auto;" class="col-md-6">
 
           <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Song</label>
-            <input type="url" class="form-control" id="songUrl" name="songUrl" placeholder="Spotify song url">
+            <label for="songUrl" class="form-label">Song</label>
+            <input type="url" class="form-control" id="songUrl" name="songUrl" placeholder="Spotify song url"
+              style="height: fit-content; width: fill;" autocomplete="off" required>
           </div>
 
           <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">description</label>
-            <textarea class="form-control" id="description" name="description" rows="3"
-              placeholder="Description..."></textarea>
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Description..."
+              style="height: fit-content; width: fill;" autocomplete="off" required></textarea>
           </div>
 
           <div class="col-12">
-            <button class="btn btn-primary" type="submit">Post</button>
+            <button class="btn btn-primary" type="submit" style="float: right;">Post</button>
           </div>
 
         </form>

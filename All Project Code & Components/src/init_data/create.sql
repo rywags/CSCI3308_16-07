@@ -26,6 +26,7 @@ CREATE TABLE posts (
     song_url VARCHAR(2000),
     song_duration INT, -- ms
     explicit BOOLEAN,
+    likes INT DEFAULT 0,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
@@ -60,4 +61,17 @@ CREATE TABLE follows (
     CONSTRAINT fk_following_id
         FOREIGN KEY(following_id) 
         REFERENCES users (user_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS likes CASCADE;
+CREATE TABLE likes (
+    like_id SERIAL PRIMARY KEY,
+    user_id INT,
+    post_id INT,
+    CONSTRAINT fk_user_id
+        FOREIGN KEY(user_id) 
+        REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_post_id
+        FOREIGN KEY(post_id) 
+        REFERENCES posts (post_id) ON DELETE CASCADE
 );
