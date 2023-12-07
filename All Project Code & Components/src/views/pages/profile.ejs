@@ -124,73 +124,75 @@
                   <h1 style="background-color: whitesmoke; border-color: black; border-width: 2px; border-style: solid; padding:
                   12px;">
                     Top Songs</h1>
-                  <% topTracks.items.forEach(function(song) { %>
-                    <div class="col" style="width: 90%; border-color: black; border-width: 2px; border-style: solid; padding:
+                  <% if (topTracks) { %>
+                    <% topTracks.items.forEach(function(song) { %>
+                      <div class="col" style="width: 90%; border-color: black; border-width: 2px; border-style: solid; padding:
                     16px; margin-top: 24px;">
-                      <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                          <img src="<%= song.album.images[0].url %>" alt="Album cover"
-                            style="width: 80px; height: auto;">
-                          <div style="padding-left: 20px;">
-                            <h2>
-                              <%= song.name %>
-                            </h2>
-                            <h3 style="font-size: 14px; margin-top: 8px;">
-                              <%= song.artists[0].name %>
-                            </h3>
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="d-flex align-items-center">
+                            <img src="<%= song.album.images[0].url %>" alt="Album cover"
+                              style="width: 80px; height: auto;">
+                            <div style="padding-left: 20px;">
+                              <h2>
+                                <%= song.name %>
+                              </h2>
+                              <h3 style="font-size: 14px; margin-top: 8px;">
+                                <%= song.artists[0].name %>
+                              </h3>
+                            </div>
+                          </div>
+                          <div class="d-flex align-items-center" style="width: 60px; height: 60px;">
+                            <button onclick="window.location.href='<%= song.external_urls.spotify %>'"
+                              style="width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center; border: none; background: none;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black"
+                                class="bi bi-play-fill" viewBox="0 0 16 16"
+                                style="z-index: 1; transform: translateX(1px);">
+                                <path
+                                  d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                              </svg>
+                            </button>
                           </div>
                         </div>
-                        <div class="d-flex align-items-center" style="width: 60px; height: 60px;">
-                          <button onclick="window.location.href='<%= song.external_urls.spotify %>'"
-                            style="width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center; border: none; background: none;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="black"
-                              class="bi bi-play-fill" viewBox="0 0 16 16"
-                              style="z-index: 1; transform: translateX(1px);">
-                              <path
-                                d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
-                            </svg>
-                          </button>
-                        </div>
                       </div>
-                    </div>
-                    <% }); %>
+                      <% }); } %>
                 </div>
                 <!-- Top Artists -->
                 <div class="col-6 d-flex flex-column align-items-center" style="background-color: transparent;">
                   <h1 style="background-color: whitesmoke; border-color: black; border-width: 2px; border-style: solid; padding:
                   12px;">
                     Top Artists</h1>
-                  <% topArtists.items.forEach(function(artist) { %>
-                    <div class="col" style="width: 90%; border-color: black; border-width: 2px; border-style: solid; padding:
+                  <% if (topArtists) { %>
+                    <% topArtists.items.forEach(function(artist) { %>
+                      <div class="col" style="width: 90%; border-color: black; border-width: 2px; border-style: solid; padding:
                       16px; margin-top: 24px;">
-                      <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                          <img src="<%= artist.images[0].url %>" alt="Album cover" style="width: 80px; height: auto;">
-                          <div style="padding-left: 20px;">
-                            <h2>
-                              <%= artist.name %>
-                            </h2>
-                            <h3 style="font-size: 14px; margin-top: 8px;">
-                              <%= artist.genres.join(', ') %>
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="d-flex align-items-center">
+                            <img src="<%= artist.images[0].url %>" alt="Album cover" style="width: 80px; height: auto;">
+                            <div style="padding-left: 20px;">
+                              <h2>
+                                <%= artist.name %>
+                              </h2>
+                              <h3 style="font-size: 14px; margin-top: 8px;">
+                                <%= artist.genres.join(', ') %>
                             </h3>
                           </div>
                         </div>
                         <div class="d-flex align-items-center" style="width: 60px; height: 60px;">
                           <button onclick="window.location.href=' <%=artist.external_urls.spotify %>'"
-                                style="width: 40px; height: 40px; padding: 0; display: flex; justify-content:
-                                center;
-                                align-items: center; border: none; background: none;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black"
-                                  class="bi bi-arrow-up-right" viewBox="0 0 16 16">
-                                  <path fill-rule="evenodd"
-                                    d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0z" />
-                                </svg>
-                                </button>
+                                  style="width: 40px; height: 40px; padding: 0; display: flex; justify-content:
+                                  center;
+                                  align-items: center; border: none; background: none;">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black"
+                                    class="bi bi-arrow-up-right" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                      d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0z" />
+                                  </svg>
+                                  </button>
+                            </div>
                           </div>
                         </div>
+                        <% }); }%>
                       </div>
-                      <% }); %>
-                    </div>
                 </div>
               </div>
             </div>
