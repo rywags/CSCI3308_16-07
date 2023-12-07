@@ -395,7 +395,23 @@ app.get('/home/:amount', auth, async (req, res) => {
 app.get('/profile', auth, async (req, res) => {
     db.one('SELECT * FROM users WHERE username = $1;', req.session.user.username)
         .then(async (data) => {
-            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: false });
+            const postData = await db.any(`
+            SELECT posts.*, users.*, comments.*, posts.post_id AS post_post_id, comments.post_id AS comment_post_id,
+            CASE WHEN likes.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_liked
+            FROM posts
+            INNER JOIN users ON users.user_id = posts.user_id
+            LEFT JOIN (
+                SELECT *, ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY created_at DESC) as rn
+                FROM comments
+            ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
+            LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
+            WHERE posts.user_id IN (
+                SELECT following_id FROM follows WHERE follower_id = $1
+                UNION
+                SELECT $1
+            )
+            ORDER BY posts.post_id DESC;`, [req.session.user.id]);
+            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: false, posts: postData });
         }).catch((error) => {
             console.error(error);
             res.render('pages/home', {
@@ -408,7 +424,23 @@ app.get('/profile', auth, async (req, res) => {
 app.get('/profile/edit', auth, async (req, res) => {
     db.one('SELECT * FROM users WHERE username = $1;', req.session.user.username)
         .then(async (data) => {
-            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: true });
+            const postData = await db.any(`
+            SELECT posts.*, users.*, comments.*, posts.post_id AS post_post_id, comments.post_id AS comment_post_id,
+            CASE WHEN likes.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_liked
+            FROM posts
+            INNER JOIN users ON users.user_id = posts.user_id
+            LEFT JOIN (
+                SELECT *, ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY created_at DESC) as rn
+                FROM comments
+            ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
+            LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
+            WHERE posts.user_id IN (
+                SELECT following_id FROM follows WHERE follower_id = $1
+                UNION
+                SELECT $1
+            )
+            ORDER BY posts.post_id DESC;`, [req.session.user.id]);
+            res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: true, posts: postData });
         }).catch((error) => {
             console.error(error);
             res.render('pages/home', {
@@ -443,6 +475,23 @@ app.get('/profile/:user_id', auth, async (req, res) => {
         return;
     }
 
+    const postData = await db.any(`
+                    SELECT posts.*, users.*, comments.*, posts.post_id AS post_post_id, comments.post_id AS comment_post_id,
+                    CASE WHEN likes.user_id IS NOT NULL THEN TRUE ELSE FALSE END AS user_liked
+                    FROM posts
+                    INNER JOIN users ON users.user_id = posts.user_id
+                    LEFT JOIN (
+                        SELECT *, ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY created_at DESC) as rn
+                        FROM comments
+                    ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
+                    LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
+                    WHERE posts.user_id IN (
+                        SELECT following_id FROM follows WHERE follower_id = $1
+                        UNION
+                        SELECT $1
+                    )
+                    ORDER BY posts.post_id DESC;`, [user_id]);
+
     db.one('SELECT * FROM users WHERE user_id = $1;', user_id)
         .then(async (data) => {
             db.oneOrNone('SELECT * FROM follows WHERE follower_id = $1 AND following_id = $2;', [current_user_id, user_id])
@@ -451,7 +500,7 @@ app.get('/profile/:user_id', auth, async (req, res) => {
                     if (followData) {
                         isfollowing = true;
                     }
-                    res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: false, isfollowing: isfollowing });
+                    res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: false, isfollowing: isfollowing, posts: postData });
                 }).catch((error) => {
                     console.error(error);
                     res.render('pages/home', {

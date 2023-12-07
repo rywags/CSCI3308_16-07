@@ -198,6 +198,166 @@
         </div>
       </div>
 
+      <div class="container mt-4">
+        <div class="row">
+          <% if (typeof posts !=="undefined" ) { %>
+            <% posts.forEach(post=> { %>
+              <div class="col-12">
+                <div class="container box-shadow"
+                  style="position: relative; max-width: 390px; width: 100%; height: fit-content; padding: 0px;">
+                  <div class="col"
+                    style="width: 100%; height: fit-content; border-color: black; border-width: 1px; border-style: solid; padding: 12px;">
+                    <h2 style="padding-bottom: 4px;">
+                      <%= post.song_name %>
+                    </h2>
+
+                    <h2 class="subtitle">
+                      <%= post.artist %>
+                    </h2>
+
+
+                  </div>
+                  <div class="col"
+                    style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; overflow: hidden;">
+                    <img src="<%= post.img_url %>" width="100%"></img>
+                  </div>
+                  <div class="col"
+                    style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; padding: 12px; padding-bottom: 16px;">
+
+                    <div class="d-flex justify-content-between">
+                      <div class="d-flex align-items-center" style="padding-bottom: 12px;">
+                        <img src="<%= post.profile_picture %>" width="32px" height="32px"
+                          style="border-radius: 50%; margin-right: 10px;">
+                        <div class="d-flex flex-column" style="align-items: flex-start;">
+                          <h2>
+                            <%= post.display_name %>
+                          </h2>
+                          <h2 class="subtitle">
+                            @<%= post.username %>
+                          </h2>
+                        </div>
+
+                      </div>
+                      <div class="like-section">
+                        <button type="button" onclick="toggleLike('<%= post.post_post_id %>', this)"
+                          class="like-button btn" data-liked="<%= post.user_liked %>" style="padding: 0;">
+                          <% if(post.user_liked) { %>
+                            <i class="bi bi-heart-fill"></i>
+                            <% } else { %>
+                              <i class="bi bi-heart"></i>
+                              <% } %>
+                        </button>
+                        <span id="like-count-<%= post.post_post_id %>">
+                          <%= post.likes %>
+                        </span>
+                        <span>
+                          Likes
+                        </span>
+                      </div>
+                    </div>
+
+
+                    <div>
+                      <p style="word-wrap: break-word;">
+                        <%= post.description %>
+                      </p>
+                    </div>
+
+                  </div>
+                  <div class=" col"
+                    style="width: 100%; border-color: black; border-width: 1px; border-style: solid; border-top: 0px; padding: 12px;">
+                    <div class="d-flex align-items-center justify-content-between" style="padding-bottom: 8px;">
+                      <p style="color: black;">
+                        Comments
+                      </p>
+                      <button type="button" onclick="window.location.href='/post/comments/<%= post.post_post_id %>'"
+                        style="background: none; border: none; padding: 4px 8px; font-size: 14px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="bi bi-arrow-right" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd"
+                            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
+                        </svg>
+                      </button>
+                    </div>
+                    <% if (post.comment !==null) { %>
+                      <div>
+                        <p>
+                          <%= post.comment.length> 50 ? post.comment.slice(0, 50) :
+                            post.comment %>...
+                        </p>
+                      </div>
+                      <% } else { %>
+                        <div>
+                          <p>
+                            No comments yet
+                          </p>
+                        </div>
+                        <% } %>
+                          <div style="position: absolute;
+                                        right: 12px;
+                                        top: 390px;
+                                        width: 60px;
+                                        height: 60px;">
+                            <button onclick="window.location.href='<%= post.song_url %>'"
+                              style="width: 100%; height: 100%; border: none; background: none; padding: 0; display: flex; justify-content: center; align-items: center; position: relative;">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="61" height="61" viewBox="0 0 61 61"
+                                fill="none">
+                                <circle cx="30.0828" cy="30.6958" r="29.5" fill="white" stroke="black" />
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="black"
+                                class="bi bi-play-fill" viewBox="0 0 16 16"
+                                style="z-index: 1; position: absolute; transform: translateX(1px);">
+                                <path
+                                  d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                              </svg>
+                            </button>
+                          </div>
+                  </div>
+                </div>
+                <div style="display: flex; justify-content: center; padding-top: 48px; padding-bottom: 48px;">
+                  <hr
+                    style="max-width: 390px; width: 100%; border: 0; border-top: 2px solid black; height: 1px; margin: 0;">
+                </div>
+              </div>
+              <% }); %>
+
+                <script>
+                  async function toggleLike(postId, button) {
+                    const liked = button.getAttribute('data-liked') === 'true';
+                    const url = `/post/${liked ? 'unlike' : 'like'}/${postId}`;
+
+                    try {
+                      const response = await fetch(url, { method: 'POST' });
+                      if (response.ok) {
+                        // Update like count
+                        var likeCountElement = document.getElementById('like-count-' + postId);
+                        var currentLikes = parseInt(likeCountElement.innerText);
+                        likeCountElement.innerText = liked ? currentLikes - 1 : currentLikes + 1;
+
+                        // Update button icon and data-liked attribute
+                        if (liked) {
+                          button.innerHTML = '<i class="bi bi-heart"></i>';
+                          button.setAttribute('data-liked', 'false');
+                        } else {
+                          button.innerHTML = '<i class="bi bi-heart-fill"></i>';
+                          button.setAttribute('data-liked', 'true');
+                        }
+                      } else {
+                        console.error('Failed to toggle like');
+                      }
+                    } catch (error) {
+                      console.error('Error:', error);
+                    }
+                  }
+                </script>
+
+                <% } else { %>
+                  <div class=" col-12">
+                    <h1>No Posts Found</h1>
+                  </div>
+                  <% } %>
+        </div>
+      </div>
     </main>
 
     <%- include(`../partials/footer`) %>
