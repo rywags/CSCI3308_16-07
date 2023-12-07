@@ -161,6 +161,7 @@ const getTopTracks = async (req, res, next) => {
 
         const options = {
             limit: 3,
+            time_range: 'short_term'
         }
 
         const data = await spotifyApi.getMyTopTracks(options);
@@ -181,6 +182,7 @@ const getTopArtists = async (req, res, next) => {
 
         const options = {
             limit: 3,
+            time_range: 'short_term'
         }
 
         const data = await spotifyApi.getMyTopArtists(options);
