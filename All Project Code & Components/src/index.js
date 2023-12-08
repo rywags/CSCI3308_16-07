@@ -377,8 +377,6 @@ app.get('/home/:amount', auth, async (req, res) => {
         LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
         WHERE posts.user_id IN (
             SELECT following_id FROM follows WHERE follower_id = $1
-            UNION
-            SELECT $1
         )
         ORDER BY posts.post_id DESC
         LIMIT $2;
@@ -407,11 +405,7 @@ app.get('/profile', auth, async (req, res) => {
                 FROM comments
             ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
             LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
-            WHERE posts.user_id IN (
-                SELECT following_id FROM follows WHERE follower_id = $1
-                UNION
-                SELECT $1
-            )
+            WHERE posts.user_id = $1
             ORDER BY posts.post_id DESC;`, [req.session.user.id]);
             res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: false, posts: postData });
         }).catch((error) => {
@@ -436,11 +430,7 @@ app.get('/profile/edit', auth, async (req, res) => {
                 FROM comments
             ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
             LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
-            WHERE posts.user_id IN (
-                SELECT following_id FROM follows WHERE follower_id = $1
-                UNION
-                SELECT $1
-            )
+            WHERE posts.user_id = $1
             ORDER BY posts.post_id DESC;`, [req.session.user.id]);
             res.render('pages/profile', { user: data, topTracks: data.top_songs, topArtists: data.top_artists, ownProfile: true, edit: true, posts: postData });
         }).catch((error) => {
@@ -487,11 +477,7 @@ app.get('/profile/:user_id', auth, async (req, res) => {
                         FROM comments
                     ) comments ON comments.post_id = posts.post_id AND comments.rn = 1
                     LEFT JOIN likes ON likes.post_id = posts.post_id AND likes.user_id = $1
-                    WHERE posts.user_id IN (
-                        SELECT following_id FROM follows WHERE follower_id = $1
-                        UNION
-                        SELECT $1
-                    )
+                    WHERE posts.user_id = $1
                     ORDER BY posts.post_id DESC;`, [user_id]);
 
     db.one('SELECT * FROM users WHERE user_id = $1;', user_id)
