@@ -79,7 +79,7 @@ const getTrackInfo = async (req, res, next) => {
         res.locals.trackInfo = data.body;
         next();
     } catch (error) {
-        console.error('Error in getTrackInfo:', error);
+        console.error('Error in getTrackInfo:', JSON.stringify(error, null, 2));
         res.render('pages/home', {
             message: "Failed to get track info from song link",
             error: true
@@ -92,8 +92,7 @@ const setSessionAccessToken = async (req, res, next) => {
     console.log("setting session access token");
     try {
         const currentTime = new Date().getTime();
-        if (!req.session.accessToken || currentTime > tokenExpirationTime) {
-            console.log(req.session.user.spotify_refresh_token);
+        if (!req.session.user.spotify_access_token || currentTime > req.session.user.tokenExpirationTime) {
             spotifyApi.setRefreshToken(req.session.user.spotify_refresh_token);
             data = await spotifyApi.refreshAccessToken();
 
@@ -107,9 +106,10 @@ const setSessionAccessToken = async (req, res, next) => {
 
             req.session.user = user;
             req.session.save();
-            console.log('The session access token has been refreshed.');
+        } else {
+            console.log('The session access token did not need to be refreshed.');
         }
-        console.log('The session access token did not need to be refreshed.');
+        
         next();
     } catch (error) {
         console.log(error);
@@ -147,7 +147,7 @@ const getSpotifyInfo = async (req, res, next) => {
         res.locals.spotify_user_info = data.body;
         next();
     } catch (error) {
-        console.error('Error in getSpotifyInfo:', error);
+        console.error('Error in getSpotifyInfo:', JSON.stringify(error, null, 2));
         res.render('pages/home', {
             message: "Failed to get spotify user info",
             error: true
@@ -168,7 +168,7 @@ const getTopTracks = async (req, res, next) => {
         res.locals.tracks = data.body;
         next();
     } catch (error) {
-        console.error('Error in getTopTracks:', error);
+        console.error('Error in getTopTracks:', JSON.stringify(error, null, 2));
         res.render('pages/home', {
             message: "Failed to get top tracks",
             error: true
@@ -189,7 +189,7 @@ const getTopArtists = async (req, res, next) => {
         res.locals.artists = data.body;
         next();
     } catch (error) {
-        console.error('Error in getTopArtists:', error);
+        console.error('Error in getTopArtists:', JSON.stringify(error, null, 2));
         res.render('pages/home', {
             message: "Failed to get top artists",
             error: true
